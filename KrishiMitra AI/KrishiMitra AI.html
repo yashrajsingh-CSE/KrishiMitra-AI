@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>KrishiMitra AI — കൃഷിമിത്ര AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --g900:#082018;--g800:#1B4332;--g700:#2D6A4F;--g600:#40916C;--g500:#52B788;
+  --g400:#74C69D;--g300:#95D5B2;--g200:#B7E4C7;--g100:#D8F3DC;--g50:#F0FAF4;
+  --e800:#5C3D1E;--e700:#7D5730;--e600:#9E7142;--e500:#C07A4A;--e400:#D4A574;
+  --e300:#E8C9A0;--e200:#F4E4C1;--e100:#FEF9EE;
+  --acc:#E76F51;--acc2:#F4A261;--acc3:#FDECD5;
+  --bg:var(--g50);--surf:#fff;--surf2:#F7FCF8;
+  --t1:var(--g800);--t2:var(--g700);--t3:var(--g600);--t4:#74A882;
+  --bdr:rgba(64,145,108,.14);--bdr2:rgba(64,145,108,.25);
+  --sh:0 2px 8px rgba(27,67,50,.06);--shm:0 4px 16px rgba(27,67,50,.1);--shl:0 8px 32px rgba(27,67,50,.14);
+  --r8:8px;--r12:12px;--r16:16px;--r24:24px;
+  --sw:260px;--fn:'Nunito',system-ui,sans-serif;--fnd:'Fraunces',Georgia,serif;
+  --tr:all .25s cubic-bezier(.4,0,.2,1);
+}
+[data-theme=dark]{
+  --bg:#091610;--surf:#112018;--surf2:#1A2E22;
+  --t1:#E0F5E8;--t2:#B4D9BE;--t3:#74C69D;--t4:#529E6A;
+  --bdr:rgba(116,198,157,.12);--bdr2:rgba(116,198,157,.22);
+  --sh:0 2px 8px rgba(0,0,0,.25);--shm:0 4px 16px rgba(0,0,0,.35);--shl:0 8px 32px rgba(0,0,0,.45);
+  --e200:#2A1E10;--e100:#1E160C;--acc3:#2A1A10;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:var(--fn);background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+h1,h2,h3{font-family:var(--fnd)}
+input,select,textarea,button{font-family:var(--fn)}
+button{cursor:pointer;border:none;outline:none}
+img{max-width:100%}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--g300);border-radius:2px}
+
+/* ===== AUTH SCREENS ===== */
+#auth-screen{
+  position:fixed;inset:0;z-index:1000;display:flex;align-items:stretch;
+  background:linear-gradient(135deg,var(--g800) 0%,var(--g700) 40%,var(--g600) 100%);
+  transition:opacity .5s,transform .5s;
+}
+#auth-screen.hidden{opacity:0;transform:scale(1.05);pointer-events:none}
+.auth-left{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:3rem;position:relative;overflow:hidden;
+}
+.auth-left::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='80' fill='none' stroke='rgba(255,255,255,.04)' stroke-width='40'/%3E%3C/svg%3E") center/cover;
+}
+.auth-logo{
+  width:80px;height:80px;background:rgba(255,255,255,.15);border-radius:24px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;
+  border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px);
+  font-size:2rem;animation:float 3s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.auth-brand{font-family:var(--fnd);font-size:2.2rem;color:#fff;font-weight:700;line-height:1.1;margin-bottom:.5rem}
+.auth-tagline{color:rgba(255,255,255,.7);font-size:1rem;margin-bottom:2.5rem;font-weight:500}
+.auth-features{display:flex;flex-direction:column;gap:.75rem;width:100%;max-width:300px}
+.auth-feat{display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.85);font-size:.9rem;font-weight:600}
+.auth-feat-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.auth-right{
+  width:420px;background:var(--surf);display:flex;flex-direction:column;justify-content:center;
+  padding:3rem 2.5rem;overflow-y:auto;
+}
+@media(max-width:768px){.auth-left{display:none}.auth-right{width:100%}}
+.auth-tabs{display:flex;gap:.25rem;background:var(--surf2);border-radius:var(--r12);padding:4px;margin-bottom:2rem}
+.auth-tab{flex:1;padding:.6rem;border-radius:10px;font-weight:700;font-size:.9rem;background:transparent;color:var(--t3);transition:var(--tr)}
+.auth-tab.active{background:var(--surf);color:var(--g700);box-shadow:var(--sh)}
+.form-group{margin-bottom:1.25rem}
+.form-label{display:block;font-weight:700;font-size:.82rem;color:var(--t2);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+.form-input{
+  width:100%;padding:.75rem 1rem;border:1.5px solid var(--bdr);border-radius:var(--r12);
+  background:var(--surf2);color:var(--t1);font-size:.95rem;font-weight:500;
+  transition:var(--tr);font-family:var(--fn);
+}
+.form-input:focus{outline:none;border-color:var(--g500);background:var(--surf);box-shadow:0 0 0 3px rgba(82,183,136,.15)}
+.form-input::placeholder{color:var(--t4)}
+.btn-primary{
+  width:100%;padding:.85rem;background:var(--g700);color:#fff;border-radius:var(--r12);
+  font-weight:800;font-size:1rem;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.btn-primary:hover{background:var(--g800);transform:translateY(-1px);box-shadow:var(--shm)}
+.btn-primary:active{transform:translateY(0)}
+.divider{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0;color:var(--t4);font-size:.8rem;font-weight:600}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.btn-demo{
+  width:100%;padding:.8rem;border:1.5px solid var(--bdr2);border-radius:var(--r12);
+  font-weight:700;font-size:.9rem;background:var(--e100);color:var(--e700);
+  display:flex;align-items:center;justify-content:center;gap:.5rem;transition:var(--tr);
+}
+.btn-demo:hover{background:var(--e200);border-color:var(--e400)}
+
+/* ===== APP LAYOUT ===== */
+#app{display:flex;min-height:100vh;transition:opacity .4s}
+#app.hidden{opacity:0;pointer-events:none}
+.sidebar{
+  width:var(--sw);flex-shrink:0;background:var(--surf);
+  border-right:1px solid var(--bdr);display:flex;flex-direction:column;
+  position:fixed;inset:0 auto 0 0;z-index:100;transition:var(--tr);overflow:hidden;
+}
+@media(max-width:1024px){.sidebar{transform:translateX(-100%)}}
+.sidebar.open{transform:translateX(0)!important}
+.sidebar-logo{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.logo-row{display:flex;align-items:center;gap:.75rem}
+.logo-icon{width:42px;height:42px;background:var(--g700);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.logo-text{font-family:var(--fnd);font-size:1.3rem;font-weight:700;color:var(--t1);line-height:1}
+.logo-sub{font-size:.7rem;color:var(--t4);font-weight:600;margin-top:1px}
+.sidebar-user{padding:1rem 1.25rem;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.user-card{display:flex;align-items:center;gap:.75rem}
+.user-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--g500),var(--g700));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1rem;flex-shrink:0}
+.user-name{font-weight:700;font-size:.9rem;color:var(--t1);line-height:1.2}
+.user-role{font-size:.72rem;color:var(--t4);font-weight:600;margin-top:1px}
+.user-badge{margin-left:auto;width:8px;height:8px;background:#4ade80;border-radius:50%;box-shadow:0 0 0 2px rgba(74,222,128,.3)}
+.sidebar-nav{flex:1;padding:.75rem .75rem;overflow-y:auto}
+.nav-section{margin-bottom:1.25rem}
+.nav-section-label{font-size:.68rem;font-weight:800;color:var(--t4);text-transform:uppercase;letter-spacing:.08em;padding:.25rem .5rem;margin-bottom:.25rem}
+.nav-item{
+  display:flex;align-items:center;gap:.75rem;padding:.7rem .75rem;
+  border-radius:var(--r8);font-weight:700;font-size:.88rem;color:var(--t3);
+  cursor:pointer;transition:var(--tr);margin-bottom:1px;position:relative;
+}
+.nav-item:hover{background:var(--g100);color:var(--g700)}
+.nav-item.active{background:var(--g100);color:var(--g700)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--g600);border-radius:0 2px 2px 0}
+.nav-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;background:var(--g100);color:var(--g600);flex-shrink:0;transition:var(--tr)}
+.nav-item.active .nav-icon{background:var(--g700);color:#fff}
+.nav-badge{margin-left:auto;background:var(--acc);color:#fff;border-radius:999px;padding:.1rem .45rem;font-size:.7rem;font-weight:800}
+.sidebar-bottom{padding:.75rem 1rem;border-top:1px solid var(--bdr);flex-shrink:0}
+.lang-toggle{display:flex;gap:.25rem;background:var(--surf2);border-radius:8px;padding:3px;margin-bottom:.75rem}
+.lang-btn{flex:1;padding:.35rem;border-radius:6px;font-size:.78rem;font-weight:700;background:transparent;color:var(--t4);transition:var(--tr)}
+.lang-btn.active{background:var(--g700);color:#fff}
+.theme-row{display:flex;align-items:center;justify-content:space-between;font-size:.82rem;font-weight:700;color:var(--t3)}
+.toggle-switch{position:relative;width:44px;height:24px;cursor:pointer}
+.toggle-switch input{opacity:0;position:absolute}
+.toggle-track{position:absolute;inset:0;border-radius:12px;background:var(--bdr2);transition:var(--tr)}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:var(--tr);box-shadow:var(--sh)}
+input:checked + .toggle-track{background:var(--g600)}
+input:checked ~ .toggle-thumb{transform:translateX(20px)}
+.main-area{flex:1;margin-left:var(--sw);display:flex;flex-direction:column;min-height:100vh}
+@media(max-width:1024px){.main-area{margin-left:0}}
+.topbar{
+  background:var(--surf);border-bottom:1px solid var(--bdr);padding:.875rem 1.5rem;
+  display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:50;
+}
+.menu-btn{display:none;background:none;border:none;color:var(--t2);font-size:1.1rem;padding:.25rem;cursor:pointer}
+@media(max-width:1024px){.menu-btn{display:block}}
+.topbar-title{font-family:var(--fnd);font-size:1.3rem;font-weight:700;color:var(--t1);flex:1}
+.search-bar{display:flex;align-items:center;gap:.5rem;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r12);padding:.5rem .875rem;width:240px;transition:var(--tr)}
+@media(max-width:768px){.search-bar{display:none}}
+.search-bar:focus-within{border-color:var(--g400);box-shadow:0 0 0 3px rgba(82,183,136,.12)}
+.search-bar input{background:none;border:none;outline:none;color:var(--t1);font-size:.88rem;font-weight:500;width:100%;font-family:var(--fn)}
+.search-bar input::placeholder{color:var(--t4)}
+.topbar-actions{display:flex;align-items:center;gap:.5rem}
+.icon-btn{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--surf2);border:1px solid var(--bdr);color:var(--t2);font-size:.9rem;cursor:pointer;transition:var(--tr);position:relative}
+.icon-btn:hover{background:var(--g100);color:var(--g700);border-color:var(--g300)}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--acc);border-radius:50%;border:1px solid var(--surf)}
+.main-content{flex:1;padding:1.5rem}
+@media(max-width:640px){.main-content{padding:1rem}}
+
+/* ===== VIEWS ===== */
+.view{display:none;animation:viewIn .3s ease}
+.view.active{display:block}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page-header{margin-bottom:1.5rem}
+.page-title{font-family:var(--fnd);font-size:1.6rem;font-weight:700;color:var(--t1);line-height:1.2}
+.page-subtitle{font-size:.9rem;color:var(--t4);font-weight:500;margin-top:.25rem}
+
+/* ===== DASHBOARD ===== */
+.greeting-banner{
+  background:linear-gradient(135deg,var(--g700) 0%,var(--g600) 100%);
+  border-radius:var(--r16);padding:1.5rem;margin-bottom:1.25rem;
+  position:relative;overflow:hidden;
+}
+.greeting-banner::after{
+  content:'🌾';position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);font-size:4rem;opacity:.15;
+}
+.greeting-time{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.25rem}
+.greeting-text{font-family:var(--fnd);font-size:1.5rem;color:#fff;font-weight:600;line-height:1.3}
+.greeting-sub{font-size:.85rem;color:rgba(255,255,255,.75);margin-top:.35rem;font-weight:500}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:1.25rem}
+.stat-card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r12);padding:1.1rem;transition:var(--tr);cursor:pointer}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shm);border-color:var(--g300)}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:.75rem}
+.stat-value{font-family:var(--fnd);font-size:1.6rem;font-weight:700;color:var(--t1);line-height:1}
+.stat-label{font-size:.78rem;color:var(--t4);font-weight:600;margin-top:.25rem}
+.stat-delta{font-size:.75rem;font-weight:700;margin-top:.35rem}
+.delta-up{color:#22c55e}.delta-down{color:var(--acc)}
+.dashboard-grid{display:grid;grid-template-columns:1fr 320px;gap:1.25rem}
+@media(max-width:1100px){.dashboard-grid{grid-template-columns:1fr}}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r16);padding:1.25rem;margin-bottom:1.25rem}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.card-title{font-weight:800;font-size:.95rem;color:var(--t1);display:flex;align-items:center;gap:.5rem}
+.card-action{font-size:.8rem;font-weight:700;color:var(--g600);cursor:pointer;padding:.25rem .5rem;border-radius:6px;transition:var(--tr)}
+.card-action:hover{background:var(--g100)}
+.task-item{display:flex;align-items:flex-start;gap:.875rem;padding:.75rem 0;border-bottom:1px solid var(--bdr)}
+.task-item:last-child{border-bottom:none}
+.task-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--g400);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--tr)}
+.task-check.done{background:var(--g500);border-color:var(--g500);color:#fff}
+.task-text{font-weight:600;font-size:.88rem;color:var(--t1);line-height:1.4}
+.task-meta{font-size:.75rem;color:var(--t4);margin-top:.2rem;display:flex;align-items:center;gap:.5rem}
+.tag{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:999px;font-size:.72rem;font-weight:700}
+.tag-green{background:var(--g100);color:var(--g700)}
+.tag-amber{background:#FEF3C7;color:#92400E}
+.tag-red{background:#FEE2E2;color:#991B1B}
+.tag-blue{background:#DBEAFE;color:#1E40AF}
+.weather-card{background:linear-gradient(135deg,#1A5276 0%,#1F618D 50%,#2E86C1 100%);border-radius:var(--r16);padding:1.25rem;color:#fff;margin-bottom:1rem}
+.weather-temp{font-family:var(--fnd);font-size:3.5rem;font-weight:300;line-height:1;margin:.5rem 0}
+.weather-desc{font-size:.9rem;opacity:.85;font-weight:600}
+.weather-row{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+.weather-stat{background:rgba(255,255,255,.12);border-radius:10px;padding:.5rem .75rem;font-size:.78rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.forecast-row{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.25rem;margin-top:.75rem}
+.forecast-item{flex-shrink:0;background:rgba(255,255,255,.1);border-radius:10px;padding:.5rem .65rem;text-align:center;font-size:.75rem;font-weight:600;min-width:56px}
+.ai-suggestion{margin-top:1rem;background:rgba(255,255,255,.15);border-radius:10px;padding:.75rem;font-size:.82rem;font-weight:600;display:flex;gap:.5rem}
+.alert-item{display:flex;align-items:flex-start;gap:.875rem;padding:.75rem;border-radius:var(--r8);margin-bottom:.5rem;transition:var(--tr);cursor:pointer}
+.alert-item:hover{background:var(--surf2)}
+.alert-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.alert-text{font-weight:600;font-size:.85rem;color:var(--t1);line-height:1.4}
+.alert-time{font-size:.72rem;color:var(--t4);margin-top:.15rem}
+
+/* ===== CROP ADVISORY ===== */
+.module-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:900px){.module-layout{grid-template-columns:1fr}}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+.form-select{
+  width:100%;padding:.75rem 1rem;border:1.5px solid var(--bdr);border-radius:var(--r12);
+  background:var(--surf2);color:var(--t1);font-size:.95rem;font-weight:500;
+  transition:var(--tr);font-family:var(--fn);appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2340916C' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .875rem center;
+}
+.form-select:focus{outline:none;border-color:var(--g500);box-shadow:0 0 0 3px rgba(82,183,136,.15)}
+.advisory-result{display:none}
+.advisory-result.show{display:block;animation:viewIn .4s ease}
+.rec-item{display:flex;gap:.875rem;padding:.875rem;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r12);margin-bottom:.75rem;transition:var(--tr)}
+.rec-item:hover{border-color:var(--g300);background:var(--g50)}
+.rec-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.rec-title{font-weight:800;font-size:.9rem;color:var(--t1)}
+.rec-text{font-size:.82rem;color:var(--t3);margin-top:.25rem;line-height:1.5}
+.confidence-bar{height:6px;border-radius:3px;background:var(--bdr);overflow:hidden;margin-top:.5rem}
+.confidence-fill{height:100%;border-radius:3px;background:var(--g500);transition:width .8s cubic-bezier(.4,0,.2,1)}
+
+/* ===== DISEASE DETECTION ===== */
+.upload-zone{
+  border:2.5px dashed var(--bdr2);border-radius:var(--r16);padding:3rem 2rem;
+  text-align:center;cursor:pointer;transition:var(--tr);background:var(--surf2);
+}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--g500);background:var(--g50)}
+.upload-icon{font-size:2.5rem;margin-bottom:1rem;opacity:.5}
+.upload-title{font-weight:800;font-size:1rem;color:var(--t1);margin-bottom:.25rem}
+.upload-hint{font-size:.82rem;color:var(--t4)}
+.upload-btn{margin-top:1rem;display:inline-flex;align-items:center;gap:.5rem;background:var(--g700);color:#fff;border-radius:var(--r8);padding:.6rem 1.25rem;font-weight:700;font-size:.88rem;cursor:pointer;transition:var(--tr)}
+.upload-btn:hover{background:var(--g800)}
+#file-input{display:none}
+.preview-box{border-radius:var(--r12);overflow:hidden;margin-bottom:1rem;display:none;position:relative}
+.preview-box img{width:100%;height:200px;object-fit:cover}
+.preview-overlay{position:absolute;inset:0;background:rgba(27,67,50,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem;gap:.5rem}
+.disease-result{display:none}
+.disease-result.show{display:block;animation:viewIn .4s ease}
+.disease-header{display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--acc3);border-radius:var(--r12);border:1px solid rgba(231,111,81,.2);margin-bottom:1rem}
+.disease-icon{width:48px;height:48px;border-radius:12px;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;flex-shrink:0}
+.disease-name{font-weight:800;font-size:1rem;color:var(--t1)}
+.confidence-text{font-size:.8rem;color:var(--t4);margin-top:.15rem}
+.treatment-step{display:flex;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--bdr)}
+.treatment-step:last-child{border-bottom:none}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--g700);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0}
+.step-text{font-size:.88rem;color:var(--t2);font-weight:600;line-height:1.5}
+
+/* ===== WEATHER MODULE ===== */
+.weather-big{background:linear-gradient(135deg,#0C2461 0%,#1A5276 50%,#2980B9 100%);border-radius:var(--r16);padding:2rem;color:#fff;margin-bottom:1.25rem}
+.weather-location{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600;opacity:.75;margin-bottom:.5rem}
+.weather-main{display:flex;align-items:flex-end;gap:1.5rem;flex-wrap:wrap}
+.weather-big-temp{font-family:var(--fnd);font-size:5rem;font-weight:300;line-height:1}
+.weather-details{display:flex;flex-direction:column;gap:.25rem}
+.weather-condition{font-size:1.1rem;font-weight:700}
+.weather-feels{font-size:.85rem;opacity:.75}
+.weather-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1.5rem}
+@media(max-width:640px){.weather-stats-row{grid-template-columns:repeat(2,1fr)}}
+.weather-stat-box{background:rgba(255,255,255,.12);border-radius:12px;padding:.875rem;text-align:center}
+.wsb-icon{font-size:1.25rem;margin-bottom:.25rem}
+.wsb-val{font-size:1.1rem;font-weight:700}
+.wsb-label{font-size:.72rem;opacity:.7;font-weight:600;margin-top:.1rem}
+.forecast-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
+@media(max-width:640px){.forecast-grid{grid-template-columns:repeat(4,1fr)}}
+.fc-item{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r12);padding:.75rem .5rem;text-align:center}
+.fc-day{font-size:.72rem;font-weight:700;color:var(--t4);margin-bottom:.25rem}
+.fc-icon{font-size:1.3rem;margin-bottom:.25rem}
+.fc-temp{font-size:.85rem;font-weight:700;color:var(--t1)}
+.fc-rain{font-size:.7rem;color:#60A5FA;font-weight:600}
+.ai-advice-box{background:linear-gradient(135deg,var(--g50),var(--e100));border:1px solid var(--bdr);border-radius:var(--r16);padding:1.25rem}
+.advice-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.875rem}
+.advice-icon{width:42px;height:42px;background:var(--g700);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff}
+.advice-title{font-weight:800;font-size:.95rem;color:var(--t1)}
+.advice-sub{font-size:.78rem;color:var(--t4)}
+.advice-item{display:flex;align-items:flex-start;gap:.625rem;margin-bottom:.625rem}
+.advice-bullet{width:6px;height:6px;border-radius:50%;background:var(--g500);flex-shrink:0;margin-top:.4rem}
+.advice-text{font-size:.85rem;color:var(--t2);font-weight:600;line-height:1.5}
+
+/* ===== VOICE ASSISTANT ===== */
+.voice-center{display:flex;flex-direction:column;align-items:center;padding:2rem 1rem}
+.mic-container{position:relative;margin-bottom:2rem}
+.mic-ripple{position:absolute;inset:-20px;border-radius:50%;border:2px solid var(--g400);opacity:0;animation:none}
+.mic-ripple.r1{inset:-20px}.mic-ripple.r2{inset:-35px;border-color:var(--g300)}.mic-ripple.r3{inset:-50px;border-color:var(--g200)}
+.mic-btn.recording .mic-ripple{animation:ripple 1.5s ease-out infinite}
+.mic-btn.recording .r2{animation-delay:.3s}
+.mic-btn.recording .r3{animation-delay:.6s}
+@keyframes ripple{0%{opacity:.6;transform:scale(1)}100%{opacity:0;transform:scale(1.2)}}
+.mic-core{
+  width:100px;height:100px;border-radius:50%;background:var(--g700);
+  display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;
+  cursor:pointer;transition:var(--tr);box-shadow:var(--shm);position:relative;z-index:1;
+}
+.mic-core:hover{background:var(--g600);transform:scale(1.05)}
+.mic-core.recording{background:var(--acc);animation:pulse .8s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.voice-status{font-weight:700;font-size:1rem;color:var(--t2);margin-bottom:.5rem}
+.voice-hint{font-size:.82rem;color:var(--t4);text-align:center;max-width:280px}
+.waveform{display:flex;align-items:center;justify-content:center;gap:3px;height:40px;margin:1rem 0;opacity:0;transition:var(--tr)}
+.waveform.active{opacity:1}
+.wave-bar{width:4px;border-radius:2px;background:var(--g500);animation:wave .6s ease-in-out infinite}
+.wave-bar:nth-child(2){animation-delay:.1s}.wave-bar:nth-child(3){animation-delay:.2s}.wave-bar:nth-child(4){animation-delay:.3s}.wave-bar:nth-child(5){animation-delay:.2s}.wave-bar:nth-child(6){animation-delay:.1s}
+@keyframes wave{0%,100%{height:6px}50%{height:30px}}
+.transcript-box{width:100%;max-width:560px;background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r12);padding:1rem;min-height:60px;margin-top:1rem;display:none}
+.transcript-box.show{display:block}
+.transcript-label{font-size:.72rem;font-weight:800;color:var(--t4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.transcript-text{font-size:.9rem;font-weight:600;color:var(--t1);line-height:1.6}
+.ai-response-box{width:100%;max-width:560px;background:var(--g100);border:1px solid var(--g200);border-radius:var(--r12);padding:1rem;margin-top:.75rem;display:none}
+.ai-response-box.show{display:block;animation:viewIn .4s ease}
+.ai-response-label{font-size:.72rem;font-weight:800;color:var(--g700);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.ai-response-text{font-size:.88rem;font-weight:600;color:var(--g800);line-height:1.7}
+.voice-examples{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1.25rem;max-width:560px}
+.voice-pill{padding:.45rem .875rem;background:var(--surf);border:1px solid var(--bdr);border-radius:999px;font-size:.8rem;font-weight:700;color:var(--t2);cursor:pointer;transition:var(--tr)}
+.voice-pill:hover{background:var(--g100);border-color:var(--g300);color:var(--g700)}
+
+/* ===== MARKET INSIGHTS ===== */
+.market-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem}
+.market-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:1.25rem}
+.market-card{background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r16);padding:1.1rem;transition:var(--tr);cursor:pointer}
+.market-card:hover{transform:translateY(-2px);box-shadow:var(--shm);border-color:var(--g300)}
+.market-crop{display:flex;align-items:center;gap:.75rem;margin-bottom:.875rem}
+.market-crop-icon{font-size:1.5rem}
+.market-crop-name{font-weight:800;font-size:.95rem;color:var(--t1)}
+.market-crop-place{font-size:.75rem;color:var(--t4);font-weight:600}
+.market-price{font-family:var(--fnd);font-size:1.8rem;font-weight:700;color:var(--t1)}
+.market-unit{font-size:.78rem;color:var(--t4);font-weight:600;margin-left:.25rem}
+.market-change{display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:700;margin-top:.25rem}
+.price-up{color:#16a34a}.price-down{color:var(--acc)}
+.mini-chart{height:48px;display:flex;align-items:flex-end;gap:2px;margin-top:.75rem;padding-top:.25rem;border-top:1px solid var(--bdr)}
+.chart-bar{flex:1;border-radius:2px 2px 0 0;background:var(--g200);transition:var(--tr);position:relative}
+.market-card:hover .chart-bar{background:var(--g400)}
+.chart-bar.high{background:var(--g500)}
+.sell-advice{margin-top:.75rem;padding:.5rem .75rem;background:var(--acc3);border-radius:8px;font-size:.78rem;font-weight:700;color:var(--e700);display:flex;align-items:center;gap:.4rem}
+
+/* ===== NOTIFICATIONS ===== */
+.notif-filters{display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.filter-btn{padding:.4rem .875rem;border-radius:999px;font-size:.8rem;font-weight:700;background:var(--surf2);border:1px solid var(--bdr);color:var(--t3);cursor:pointer;transition:var(--tr)}
+.filter-btn.active{background:var(--g700);color:#fff;border-color:var(--g700)}
+.notif-list{display:flex;flex-direction:column;gap:.5rem}
+.notif-item{display:flex;align-items:flex-start;gap:.875rem;padding:1rem;background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r12);cursor:pointer;transition:var(--tr)}
+.notif-item:hover{border-color:var(--g300);box-shadow:var(--sh)}
+.notif-item.unread{border-left:3px solid var(--g500)}
+.notif-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.notif-body{flex:1}
+.notif-title{font-weight:800;font-size:.9rem;color:var(--t1);margin-bottom:.2rem}
+.notif-desc{font-size:.82rem;color:var(--t3);line-height:1.5}
+.notif-time{font-size:.72rem;color:var(--t4);margin-top:.35rem;font-weight:600}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--g500);flex-shrink:0;margin-top:.35rem}
+
+/* ===== SKELETON LOADERS ===== */
+.skeleton{background:linear-gradient(90deg,var(--surf2) 25%,var(--g100) 50%,var(--surf2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px}
+@keyframes shimmer{to{background-position:-200% 0}}
+
+/* ===== OVERLAY ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90;display:none;backdrop-filter:blur(2px)}
+.overlay.show{display:block}
+
+/* ===== MOBILE BOTTOM NAV ===== */
+.mobile-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:80;
+  background:var(--surf);border-top:1px solid var(--bdr);
+  padding:.5rem;display:none;
+  grid-template-columns:repeat(5,1fr);
+}
+@media(max-width:1024px){.mobile-nav{display:grid}}
+.mob-nav-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.5rem .25rem;border-radius:10px;cursor:pointer;transition:var(--tr);color:var(--t4);font-size:.62rem;font-weight:700}
+.mob-nav-item.active{color:var(--g600)}
+.mob-nav-item i{font-size:1.2rem}
+@media(max-width:1024px){.main-content{padding-bottom:80px}}
+
+/* ===== MISC ===== */
+.spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--t4)}
+.empty-icon{font-size:3rem;margin-bottom:.75rem;opacity:.4}
+.empty-text{font-weight:700;font-size:.95rem}
+.badge{display:inline-flex;align-items:center;justify-content:center;padding:.2rem .6rem;border-radius:999px;font-size:.72rem;font-weight:800}
+.badge-green{background:var(--g100);color:var(--g700)}
+.badge-orange{background:#FEF3C7;color:#B45309}
+.badge-red{background:#FEE2E2;color:#B91C1C}
+.toast-container{position:fixed;bottom:100px;right:1rem;z-index:999;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+@media(min-width:1025px){.toast-container{bottom:1.5rem}}
+.toast{background:var(--g800);color:#fff;padding:.7rem 1rem;border-radius:var(--r12);font-size:.85rem;font-weight:700;max-width:300px;animation:toastIn .3s ease;box-shadow:var(--shl);pointer-events:auto;display:flex;align-items:center;gap:.5rem}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- ===== AUTH SCREEN ===== -->
+<div id="auth-screen">
+  <div class="auth-left">
+    <div class="auth-logo">🌾</div>
+    <div class="auth-brand">KrishiMitra AI</div>
+    <div class="auth-tagline" data-t="tagline">Your Smart Farming Companion</div>
+    <div class="auth-features">
+      <div class="auth-feat"><div class="auth-feat-icon">🤖</div><span data-t="feat1">AI-Powered Crop Advisory</span></div>
+      <div class="auth-feat"><div class="auth-feat-icon">🔬</div><span data-t="feat2">Instant Disease Detection</span></div>
+      <div class="auth-feat"><div class="auth-feat-icon">🌦️</div><span data-t="feat3">Weather-Smart Decisions</span></div>
+      <div class="auth-feat"><div class="auth-feat-icon">🗣️</div><span data-t="feat4">Malayalam Voice Assistant</span></div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div style="margin-bottom:1.75rem">
+      <div style="font-family:var(--fnd);font-size:1.5rem;font-weight:700;color:var(--t1);margin-bottom:.25rem" data-t="welcome">Welcome Back</div>
+      <div style="font-size:.88rem;color:var(--t4);font-weight:500" data-t="welcome_sub">Sign in to your KrishiMitra account</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')" data-t="login">Login</button>
+      <button class="auth-tab" onclick="switchTab('signup')" data-t="signup">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-form">
+      <div class="form-group">
+        <label class="form-label" data-t="phone">Phone Number</label>
+        <input class="form-input" type="tel" placeholder="+91 98765 43210" value="+91 98765 43210">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-t="password">Password</label>
+        <div style="position:relative">
+          <input class="form-input" type="password" placeholder="Enter password" value="farmer123" id="pw-input" style="padding-right:3rem">
+          <span onclick="togglePw()" style="position:absolute;right:.875rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--t4);font-size:.9rem">
+            <i class="fa fa-eye" id="pw-icon"></i>
+          </span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--t3)">
+          <input type="checkbox" checked style="width:15px;height:15px;accent-color:var(--g600)">
+          <span data-t="remember">Remember me</span>
+        </label>
+        <span style="font-size:.82rem;font-weight:700;color:var(--g600);cursor:pointer" data-t="forgot">Forgot Password?</span>
+      </div>
+      <button class="btn-primary" onclick="doLogin()">
+        <span data-t="login_btn">Login to Dashboard</span>
+        <i class="fa fa-arrow-right"></i>
+      </button>
+      <div class="divider"><span data-t="or">or continue with</span></div>
+      <button class="btn-demo" onclick="doLogin()">
+        <i class="fa fa-leaf"></i>
+        <span data-t="demo">Try Demo Account</span>
+      </button>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signup-form" style="display:none">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" type="text" placeholder="Rajan Kumar">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input class="form-input" type="tel" placeholder="+91 ...">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">District</label>
+        <select class="form-select">
+          <option>Thiruvananthapuram</option><option>Kollam</option><option>Pathanamthitta</option>
+          <option selected>Kottayam</option><option>Idukki</option><option>Ernakulam</option>
+          <option>Thrissur</option><option>Palakkad</option><option>Malappuram</option>
+          <option>Kozhikode</option><option>Wayanad</option><option>Kannur</option><option>Kasaragod</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Primary Crop</label>
+        <select class="form-select">
+          <option>Rice / Paddy</option><option>Coconut</option><option>Rubber</option>
+          <option>Banana</option><option>Tapioca</option><option>Pepper</option>
+          <option>Arecanut</option><option>Vegetables</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" placeholder="Create password">
+      </div>
+      <button class="btn-primary" onclick="doLogin()">
+        <span>Create Account</span><i class="fa fa-check"></i>
+      </button>
+    </div>
+
+    <div style="text-align:center;margin-top:1.25rem;font-size:.78rem;color:var(--t4);font-weight:600" data-t="terms">
+      By signing in, you agree to our Terms & Privacy Policy
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="app" class="hidden">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-row">
+        <div class="logo-icon">🌾</div>
+        <div><div class="logo-text">KrishiMitra</div><div class="logo-sub">AI Farming Assistant</div></div>
+        <button onclick="closeSidebar()" style="margin-left:auto;background:none;border:none;color:var(--t4);font-size:1rem;cursor:pointer;display:none" id="close-sidebar-btn"><i class="fa fa-times"></i></button>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-card">
+        <div class="user-avatar">RK</div>
+        <div><div class="user-name" data-t="user_name">Rajan Kumar</div><div class="user-role" data-t="farmer_role">Verified Farmer</div></div>
+        <div class="user-badge"></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label" data-t="main_nav">Main</div>
+        <div class="nav-item active" onclick="navigate('dashboard')" id="nav-dashboard">
+          <div class="nav-icon"><i class="fa fa-house"></i></div>
+          <span data-t="dashboard">Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="navigate('crop')" id="nav-crop">
+          <div class="nav-icon"><i class="fa fa-seedling"></i></div>
+          <span data-t="crop_advisory">Crop Advisory</span>
+        </div>
+        <div class="nav-item" onclick="navigate('disease')" id="nav-disease">
+          <div class="nav-icon"><i class="fa fa-microscope"></i></div>
+          <span data-t="disease_detection">Disease Detection</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label" data-t="tools_nav">Tools</div>
+        <div class="nav-item" onclick="navigate('weather')" id="nav-weather">
+          <div class="nav-icon"><i class="fa fa-cloud-sun"></i></div>
+          <span data-t="weather">Weather</span>
+        </div>
+        <div class="nav-item" onclick="navigate('voice')" id="nav-voice">
+          <div class="nav-icon"><i class="fa fa-microphone"></i></div>
+          <span data-t="voice_assistant">Voice Assistant</span>
+        </div>
+        <div class="nav-item" onclick="navigate('market')" id="nav-market">
+          <div class="nav-icon"><i class="fa fa-chart-line"></i></div>
+          <span data-t="market_insights">Market Insights</span>
+        </div>
+        <div class="nav-item" onclick="navigate('notifications')" id="nav-notifications">
+          <div class="nav-icon"><i class="fa fa-bell"></i></div>
+          <span data-t="notifications">Notifications</span>
+          <span class="nav-badge">4</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+        <div class="nav-item" onclick="showToast('Settings coming soon!')">
+          <div class="nav-icon"><i class="fa fa-gear"></i></div>
+          <span>Settings</span>
+        </div>
+        <div class="nav-item" onclick="doLogout()">
+          <div class="nav-icon"><i class="fa fa-right-from-bracket"></i></div>
+          <span>Logout</span>
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="lang-en" onclick="setLang('en')">English</button>
+        <button class="lang-btn" id="lang-ml" onclick="setLang('ml')">മലയാളം</button>
+      </div>
+      <div class="theme-row">
+        <span><i class="fa fa-moon" style="margin-right:.4rem"></i><span data-t="dark_mode">Dark Mode</span></span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+  </aside>
+
+  <!-- OVERLAY for mobile sidebar -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- MAIN AREA -->
+  <main class="main-area">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <button class="menu-btn" onclick="openSidebar()"><i class="fa fa-bars"></i></button>
+      <div class="topbar-title" id="topbar-title" data-t="dashboard">Dashboard</div>
+      <div class="search-bar">
+        <i class="fa fa-search" style="color:var(--t4);font-size:.85rem"></i>
+        <input placeholder="Search crops, diseases..." data-t-placeholder="search_placeholder">
+      </div>
+      <div class="topbar-actions">
+        <div class="icon-btn" onclick="navigate('weather')" title="Weather">
+          <i class="fa fa-cloud-sun"></i>
+        </div>
+        <div class="icon-btn" onclick="navigate('notifications')" title="Notifications">
+          <i class="fa fa-bell"></i>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="icon-btn" onclick="showProfileMenu()" title="Profile">
+          <i class="fa fa-user"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- ===== DASHBOARD VIEW ===== -->
+      <div class="view active" id="view-dashboard">
+        <div class="greeting-banner">
+          <div class="greeting-time" id="greeting-time">Good Morning</div>
+          <div class="greeting-text" data-t="greeting_name">👋 Namaskaram, Rajan Kumar!</div>
+          <div class="greeting-sub" data-t="greeting_sub">Your paddy field needs attention today. Check your tasks below.</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" onclick="navigate('crop')">
+            <div class="stat-icon" style="background:var(--g100);color:var(--g700)">🌱</div>
+            <div class="stat-value">3</div>
+            <div class="stat-label" data-t="active_crops">Active Crops</div>
+            <div class="stat-delta delta-up">↑ <span data-t="on_track">All on track</span></div>
+          </div>
+          <div class="stat-card" onclick="navigate('disease')">
+            <div class="stat-icon" style="background:#FEE2E2;color:#991B1B">🔬</div>
+            <div class="stat-value">1</div>
+            <div class="stat-label" data-t="disease_alerts">Disease Alert</div>
+            <div class="stat-delta delta-down">! <span data-t="check_now">Check now</span></div>
+          </div>
+          <div class="stat-card" onclick="navigate('weather')">
+            <div class="stat-icon" style="background:#DBEAFE;color:#1E40AF">🌧️</div>
+            <div class="stat-value">28°</div>
+            <div class="stat-label" data-t="temperature">Temperature</div>
+            <div class="stat-delta delta-up" data-t="rain_expected">Rain expected</div>
+          </div>
+          <div class="stat-card" onclick="navigate('market')">
+            <div class="stat-icon" style="background:var(--e200);color:var(--e700)">💰</div>
+            <div class="stat-value">₹2,450</div>
+            <div class="stat-label" data-t="paddy_price">Paddy Price/Qt</div>
+            <div class="stat-delta delta-up">↑ 3.2% <span data-t="today">Today</span></div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-list-check" style="color:var(--g600)"></i> <span data-t="todays_tasks">Today's Tasks</span></div>
+                <div class="card-action" data-t="view_all">View All</div>
+              </div>
+              <div class="task-item">
+                <div class="task-check done" onclick="toggleTask(this)"><i class="fa fa-check" style="font-size:.7rem"></i></div>
+                <div>
+                  <div class="task-text" data-t="task1">Apply fertilizer to Field A (East Plot)</div>
+                  <div class="task-meta"><span class="tag tag-green">🌱 Paddy</span><span>8:00 AM</span></div>
+                </div>
+              </div>
+              <div class="task-item">
+                <div class="task-check" onclick="toggleTask(this)"></div>
+                <div>
+                  <div class="task-text" data-t="task2">Inspect irrigation pipes in Field B</div>
+                  <div class="task-meta"><span class="tag tag-amber">⚡ Urgent</span><span>10:00 AM</span></div>
+                </div>
+              </div>
+              <div class="task-item">
+                <div class="task-check" onclick="toggleTask(this)"></div>
+                <div>
+                  <div class="task-text" data-t="task3">Spray neem oil on coconut trees (disease prevention)</div>
+                  <div class="task-meta"><span class="tag tag-blue">🥥 Coconut</span><span>2:00 PM</span></div>
+                </div>
+              </div>
+              <div class="task-item">
+                <div class="task-check" onclick="toggleTask(this)"></div>
+                <div>
+                  <div class="task-text" data-t="task4">Take soil sample from Field C for testing</div>
+                  <div class="task-meta"><span class="tag tag-green">🌍 Soil</span><span>4:00 PM</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-bell" style="color:var(--acc)"></i> <span data-t="recent_alerts">Recent Alerts</span></div>
+                <div class="card-action" onclick="navigate('notifications')" data-t="see_all">See All</div>
+              </div>
+              <div class="alert-item" onclick="navigate('notifications')">
+                <div class="alert-icon" style="background:#FEE2E2;color:#991B1B">⚠️</div>
+                <div>
+                  <div class="alert-text" data-t="alert1">Blast disease risk HIGH in your area. Preventive spray recommended.</div>
+                  <div class="alert-time">2 hours ago · <span class="tag tag-red" style="font-size:.68rem">High Priority</span></div>
+                </div>
+              </div>
+              <div class="alert-item" onclick="navigate('notifications')">
+                <div class="alert-icon" style="background:#DBEAFE;color:#1E40AF">🌧️</div>
+                <div>
+                  <div class="alert-text" data-t="alert2">Heavy rain forecast tomorrow. Delay planned pesticide application.</div>
+                  <div class="alert-time">5 hours ago · <span class="tag tag-blue" style="font-size:.68rem">Weather Alert</span></div>
+                </div>
+              </div>
+              <div class="alert-item" onclick="navigate('notifications')">
+                <div class="alert-icon" style="background:var(--g100);color:var(--g700)">📈</div>
+                <div>
+                  <div class="alert-text" data-t="alert3">Paddy prices up 3.2% at Kottayam APMC. Good time to sell.</div>
+                  <div class="alert-time">1 day ago · <span class="tag tag-green" style="font-size:.68rem">Market</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div>
+            <div class="weather-card">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+                <div style="font-size:.78rem;font-weight:700;opacity:.75" data-t="kottayam">Kottayam, Kerala</div>
+                <div style="font-size:.78rem;font-weight:700;opacity:.75" id="weather-time"></div>
+              </div>
+              <div style="font-size:2rem;margin-bottom:.25rem">🌦️</div>
+              <div class="weather-temp">28°C</div>
+              <div class="weather-desc" data-t="partly_cloudy">Partly Cloudy · Feels 31°C</div>
+              <div class="weather-row">
+                <div class="weather-stat">💧 82%</div>
+                <div class="weather-stat">💨 12km/h</div>
+                <div class="weather-stat">☔ 65%</div>
+              </div>
+              <div class="forecast-row">
+                <div class="forecast-item"><div style="font-size:.7rem;opacity:.7">Mon</div><div>🌧️</div><div>26°</div></div>
+                <div class="forecast-item"><div style="font-size:.7rem;opacity:.7">Tue</div><div>⛈️</div><div>25°</div></div>
+                <div class="forecast-item"><div style="font-size:.7rem;opacity:.7">Wed</div><div>🌦️</div><div>27°</div></div>
+                <div class="forecast-item"><div style="font-size:.7rem;opacity:.7">Thu</div><div>☀️</div><div>30°</div></div>
+                <div class="forecast-item"><div style="font-size:.7rem;opacity:.7">Fri</div><div>🌤️</div><div>29°</div></div>
+              </div>
+              <div class="ai-suggestion">
+                🤖 <span data-t="weather_ai_tip">Delay irrigation today. Natural rainfall expected. Save 40% water.</span>
+              </div>
+            </div>
+
+            <div class="card" style="margin-bottom:0">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-chart-line" style="color:var(--e600)"></i> <span data-t="quick_prices">Quick Prices</span></div>
+                <div class="card-action" onclick="navigate('market')" data-t="more">More</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.5rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
+                  <span style="font-weight:700;font-size:.88rem">🌾 Paddy</span>
+                  <div style="text-align:right"><div style="font-weight:800;font-size:.95rem">₹2,450<span style="font-size:.7rem;color:var(--t4)">/Qt</span></div><div style="font-size:.72rem;color:#16a34a;font-weight:700">▲ 3.2%</div></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
+                  <span style="font-weight:700;font-size:.88rem">🥥 Coconut</span>
+                  <div style="text-align:right"><div style="font-weight:800;font-size:.95rem">₹25<span style="font-size:.7rem;color:var(--t4)">/Nut</span></div><div style="font-size:.72rem;color:var(--acc);font-weight:700">▼ 1.1%</div></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0">
+                  <span style="font-weight:700;font-size:.88rem">🍌 Banana</span>
+                  <div style="text-align:right"><div style="font-weight:800;font-size:.95rem">₹38<span style="font-size:.7rem;color:var(--t4)">/Kg</span></div><div style="font-size:.72rem;color:#16a34a;font-weight:700">▲ 5.8%</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CROP ADVISORY VIEW ===== -->
+      <div class="view" id="view-crop">
+        <div class="page-header">
+          <div class="page-title" data-t="crop_advisory_title">🌱 Crop Advisory</div>
+          <div class="page-subtitle" data-t="crop_advisory_sub">Get AI-powered recommendations for your crops</div>
+        </div>
+        <div class="module-layout">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-sliders" style="color:var(--g600)"></i> <span data-t="crop_details">Crop Details</span></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-t="crop_type">Crop Type</label>
+                <select class="form-select" id="crop-type">
+                  <option value="paddy">🌾 Rice / Paddy</option>
+                  <option value="coconut">🥥 Coconut</option>
+                  <option value="banana">🍌 Banana</option>
+                  <option value="rubber">🌳 Rubber</option>
+                  <option value="tapioca">🥔 Tapioca</option>
+                  <option value="pepper">🌿 Black Pepper</option>
+                  <option value="vegetables">🥦 Vegetables</option>
+                </select>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label" data-t="soil_type">Soil Type</label>
+                  <select class="form-select" id="soil-type">
+                    <option>Laterite</option>
+                    <option>Alluvial</option>
+                    <option>Clay</option>
+                    <option>Sandy Loam</option>
+                    <option>Forest Loam</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" data-t="growth_stage">Growth Stage</label>
+                  <select class="form-select">
+                    <option>Seedling</option>
+                    <option selected>Vegetative</option>
+                    <option>Flowering</option>
+                    <option>Grain Filling</option>
+                    <option>Maturity</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-t="location">Location / District</label>
+                <select class="form-select">
+                  <option>Kottayam</option>
+                  <option>Thrissur</option>
+                  <option>Palakkad</option>
+                  <option>Wayanad</option>
+                  <option>Ernakulam</option>
+                  <option>Idukki</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-t="land_area">Land Area</label>
+                <div style="display:flex;gap:.5rem">
+                  <input class="form-input" type="number" value="2.5" style="flex:1">
+                  <select class="form-select" style="width:100px">
+                    <option>Acres</option>
+                    <option>Hectares</option>
+                    <option>Cents</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" data-t="issues">Current Issues (optional)</label>
+                <textarea class="form-input" rows="3" style="resize:none" placeholder="Describe any problems you're facing..." data-t-placeholder="issues_placeholder"></textarea>
+              </div>
+              <button class="btn-primary" onclick="getAdvisory()" id="advisory-btn">
+                <i class="fa fa-wand-magic-sparkles"></i>
+                <span data-t="get_advisory">Get AI Advisory</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Advisory Results -->
+          <div>
+            <div id="advisory-skeleton" style="display:none">
+              <div class="card">
+                <div class="skeleton" style="height:20px;margin-bottom:1rem;width:60%"></div>
+                <div class="skeleton" style="height:80px;margin-bottom:.75rem;border-radius:12px"></div>
+                <div class="skeleton" style="height:80px;margin-bottom:.75rem;border-radius:12px"></div>
+                <div class="skeleton" style="height:80px;border-radius:12px"></div>
+              </div>
+            </div>
+            <div class="advisory-result" id="advisory-result">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title"><i class="fa fa-robot" style="color:var(--g600)"></i> <span data-t="ai_recommendations">AI Recommendations</span></div>
+                  <span class="badge badge-green" data-t="high_confidence">92% Match</span>
+                </div>
+                <div class="rec-item">
+                  <div class="rec-icon" style="background:#FEF3C7;color:#92400E">💊</div>
+                  <div>
+                    <div class="rec-title" data-t="rec1_title">Fertilizer Application</div>
+                    <div class="rec-text" data-t="rec1_text">Apply NPK 17:17:17 at 50kg/acre. Split in 3 doses — basal, tillering, and panicle initiation. Current vegetative stage needs high nitrogen.</div>
+                    <div class="confidence-bar"><div class="confidence-fill" style="width:94%"></div></div>
+                  </div>
+                </div>
+                <div class="rec-item">
+                  <div class="rec-icon" style="background:#DBEAFE;color:#1E40AF">💧</div>
+                  <div>
+                    <div class="rec-title" data-t="rec2_title">Irrigation Schedule</div>
+                    <div class="rec-text" data-t="rec2_text">Maintain 5cm water level. With forecasted rain tomorrow, skip today's irrigation. Resume Thursday if no rainfall. Saves 40% water.</div>
+                    <div class="confidence-bar"><div class="confidence-fill" style="width:88%"></div></div>
+                  </div>
+                </div>
+                <div class="rec-item">
+                  <div class="rec-icon" style="background:#FEE2E2;color:#991B1B">🛡️</div>
+                  <div>
+                    <div class="rec-title" data-t="rec3_title">Disease Prevention</div>
+                    <div class="rec-text" data-t="rec3_text">Blast risk HIGH in your area. Spray Tricyclazole 75% WP at 0.6g/L. Apply during early morning or late evening. Do NOT spray before rain.</div>
+                    <div class="confidence-bar"><div class="confidence-fill" style="width:97%"></div></div>
+                  </div>
+                </div>
+                <div class="rec-item">
+                  <div class="rec-icon" style="background:var(--g100);color:var(--g700)">📅</div>
+                  <div>
+                    <div class="rec-title" data-t="rec4_title">Harvest Timing</div>
+                    <div class="rec-text" data-t="rec4_text">Expected maturity in 28-32 days. Monitor grain moisture (target 20-22%). Harvest when 80% grains turn golden. Prices projected to rise 8% next month.</div>
+                    <div class="confidence-bar"><div class="confidence-fill" style="width:79%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-lightbulb" style="color:var(--acc2)"></i> <span data-t="seasonal_tips">Seasonal Tips</span></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.5rem">
+                <div style="display:flex;gap:.625rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
+                  <div style="width:28px;height:28px;border-radius:7px;background:var(--g100);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem">🌿</div>
+                  <div style="font-size:.82rem;font-weight:600;color:var(--t2);line-height:1.5" data-t="tip1">Monsoon moisture increases fungal risk. Ensure proper drainage around field boundaries.</div>
+                </div>
+                <div style="display:flex;gap:.625rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
+                  <div style="width:28px;height:28px;border-radius:7px;background:#FEF3C7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem">🦟</div>
+                  <div style="font-size:.82rem;font-weight:600;color:var(--t2);line-height:1.5" data-t="tip2">Stem borer activity peaks this season. Install pheromone traps (1 per 5 acres) as early warning.</div>
+                </div>
+                <div style="display:flex;gap:.625rem;align-items:flex-start;padding:.5rem 0">
+                  <div style="width:28px;height:28px;border-radius:7px;background:#DBEAFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem">💧</div>
+                  <div style="font-size:.82rem;font-weight:600;color:var(--t2);line-height:1.5" data-t="tip3">Weeds grow fast in wet season. First weeding at 15-20 days after transplanting is critical.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== DISEASE DETECTION VIEW ===== -->
+      <div class="view" id="view-disease">
+        <div class="page-header">
+          <div class="page-title" data-t="disease_title">🔬 Disease Detection</div>
+          <div class="page-subtitle" data-t="disease_sub">Upload a photo to identify plant diseases instantly</div>
+        </div>
+        <div class="module-layout">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-camera" style="color:var(--g600)"></i> <span data-t="upload_image">Upload Plant Image</span></div>
+              </div>
+              <div id="preview-box" class="preview-box">
+                <img id="preview-img" src="" alt="Plant preview">
+                <div class="preview-overlay" id="analyzing-overlay">
+                  <div class="spinner"></div> <span data-t="analyzing">Analyzing...</span>
+                </div>
+              </div>
+              <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)">
+                <div class="upload-icon">🍃</div>
+                <div class="upload-title" data-t="upload_title">Take or Upload a Photo</div>
+                <div class="upload-hint" data-t="upload_hint">Drag & drop or click to browse<br>Supports JPG, PNG up to 10MB</div>
+                <div class="upload-btn">
+                  <i class="fa fa-camera"></i> <span data-t="choose_photo">Choose Photo</span>
+                </div>
+              </div>
+              <input type="file" id="file-input" accept="image/*" onchange="handleFileUpload(event)">
+
+              <div style="margin-top:1rem">
+                <div style="font-size:.8rem;font-weight:700;color:var(--t4);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em" data-t="try_samples">Try Sample Images</div>
+                <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+                  <button onclick="useSampleDisease('blast')" style="padding:.4rem .75rem;border:1px solid var(--bdr);border-radius:8px;font-size:.78rem;font-weight:700;background:var(--surf2);color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:.4rem">🍃 <span data-t="blast_sample">Blast Sample</span></button>
+                  <button onclick="useSampleDisease('blight')" style="padding:.4rem .75rem;border:1px solid var(--bdr);border-radius:8px;font-size:.78rem;font-weight:700;background:var(--surf2);color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:.4rem">🟤 <span data-t="blight_sample">Blight Sample</span></button>
+                  <button onclick="useSampleDisease('healthy')" style="padding:.4rem .75rem;border:1px solid var(--bdr);border-radius:8px;font-size:.78rem;font-weight:700;background:var(--surf2);color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:.4rem">✅ <span data-t="healthy_sample">Healthy Plant</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div id="disease-result" class="disease-result card">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-magnifying-glass-chart" style="color:var(--acc)"></i> <span data-t="analysis_result">Analysis Result</span></div>
+                <span class="badge badge-red" id="result-badge">87% Confident</span>
+              </div>
+              <div class="disease-header">
+                <div class="disease-icon" id="disease-icon">🍃</div>
+                <div>
+                  <div class="disease-name" id="disease-name">Rice Blast Disease</div>
+                  <div class="confidence-text"><span data-t="confidence">Confidence</span>: <strong id="confidence-pct">87%</strong></div>
+                  <div class="confidence-bar" style="width:200px;margin-top:.35rem"><div class="confidence-fill" id="conf-bar" style="width:87%"></div></div>
+                </div>
+              </div>
+              <div class="card-header" style="margin-top:.5rem">
+                <div class="card-title" style="font-size:.85rem"><i class="fa fa-pills" style="color:var(--g600)"></i> <span data-t="treatment_steps">Treatment Steps</span></div>
+              </div>
+              <div id="treatment-list"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="fa fa-shield-halved" style="color:var(--g600)"></i> <span data-t="prevention">Prevention Tips</span></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:.625rem">
+                <div style="display:flex;gap:.625rem;align-items:flex-start">
+                  <div style="width:24px;height:24px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:.7rem;font-weight:800;flex-shrink:0">1</div>
+                  <span style="font-size:.82rem;font-weight:600;color:var(--t2);line-height:1.5" data-t="prev1">Use certified disease-free seeds. Treat seeds with Carbendazim before sowing.</span>
+                </div>
+                <div style="display:flex;gap:.625rem;align-items:flex-start">
+                  <div style="width:24px;height:24px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:.7rem;font-weight:800;flex-shrink:0">2</div>
+                  <span style="font-size:.82rem;font-weight:600;color:var(--t2);line-height:1.5" data-t="prev2">Avoid excessive nitrogen. High N increases disease susceptibility by 40%.</span>
+                </div>
+                <div style="display:flex;gap:.625rem;align-items:flex-start">
+                  <div style="width:24px;height:24px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:.7rem;font-weight:800;flex-shrink:0">3</div>
+                  <span style="font-size:.82rem;font-weight:600;color:var(--t2);line-height:1.5" data-t="prev3">Plant resistant varieties: Jyothi, Karthika, or Uma for blast-prone areas.</span>
+                </div>
+                <div style="display:flex;gap:.625rem;align-items:flex-start">
+                  <div style="width:24px;height:24px;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:.7rem;font-weight:800;flex-shrink:0">4</div>
+                  <span style="font-size:.82rem;font-weight:600;color:var(--t2);line-height:1.5" data-t="prev4">Drain fields periodically to reduce humidity at plant base. Key prevention strategy.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== WEATHER VIEW ===== -->
+      <div class="view" id="view-weather">
+        <div class="page-header">
+          <div class="page-title" data-t="weather_title">🌦️ Weather Module</div>
+          <div class="page-subtitle" data-t="weather_sub">Real-time weather data with AI-powered farming decisions</div>
+        </div>
+        <div class="weather-big">
+          <div class="weather-location"><i class="fa fa-location-dot"></i> <span data-t="location_name">Kottayam, Kerala</span></div>
+          <div class="weather-main">
+            <div><div style="font-size:3rem;line-height:1">🌦️</div><div class="weather-big-temp">28°C</div></div>
+            <div class="weather-details">
+              <div class="weather-condition" data-t="weather_cond">Partly Cloudy</div>
+              <div class="weather-feels" data-t="feels_like">Feels like 31°C · Humidity 82%</div>
+              <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+                <span class="tag tag-amber">🌡️ <span data-t="high_low">H:30° L:24°</span></span>
+                <span class="tag tag-blue">💧 <span data-t="uv_index">UV: Moderate</span></span>
+                <span class="tag tag-green">🌬️ NE @ 12 km/h</span>
+              </div>
+            </div>
+          </div>
+          <div class="weather-stats-row">
+            <div class="weather-stat-box"><div class="wsb-icon">💧</div><div class="wsb-val">82%</div><div class="wsb-label" data-t="humidity">Humidity</div></div>
+            <div class="weather-stat-box"><div class="wsb-icon">💨</div><div class="wsb-val">12 km/h</div><div class="wsb-label" data-t="wind">Wind Speed</div></div>
+            <div class="weather-stat-box"><div class="wsb-icon">☔</div><div class="wsb-val">65%</div><div class="wsb-label" data-t="rain_chance">Rain Chance</div></div>
+            <div class="weather-stat-box"><div class="wsb-icon">☀️</div><div class="wsb-val">6.2</div><div class="wsb-label" data-t="uv">UV Index</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa fa-calendar-week" style="color:var(--g600)"></i> <span data-t="7day_forecast">7-Day Forecast</span></div>
+          </div>
+          <div class="forecast-grid">
+            <div class="fc-item"><div class="fc-day" data-t="today_short">Today</div><div class="fc-icon">🌦️</div><div class="fc-temp">28°</div><div class="fc-rain">65%</div></div>
+            <div class="fc-item"><div class="fc-day">Mon</div><div class="fc-icon">🌧️</div><div class="fc-temp">25°</div><div class="fc-rain">90%</div></div>
+            <div class="fc-item"><div class="fc-day">Tue</div><div class="fc-icon">⛈️</div><div class="fc-temp">24°</div><div class="fc-rain">95%</div></div>
+            <div class="fc-item"><div class="fc-day">Wed</div><div class="fc-icon">🌦️</div><div class="fc-temp">26°</div><div class="fc-rain">70%</div></div>
+            <div class="fc-item"><div class="fc-day">Thu</div><div class="fc-icon">☀️</div><div class="fc-temp">30°</div><div class="fc-rain">15%</div></div>
+            <div class="fc-item"><div class="fc-day">Fri</div><div class="fc-icon">🌤️</div><div class="fc-temp">29°</div><div class="fc-rain">30%</div></div>
+            <div class="fc-item"><div class="fc-day">Sat</div><div class="fc-icon">⛅</div><div class="fc-temp">28°</div><div class="fc-rain">45%</div></div>
+          </div>
+        </div>
+
+        <div class="ai-advice-box">
+          <div class="advice-header">
+            <div class="advice-icon">🤖</div>
+            <div>
+              <div class="advice-title" data-t="ai_farming_advisor">AI Farming Advisor</div>
+              <div class="advice-sub" data-t="based_on_weather">Based on 7-day weather forecast</div>
+            </div>
+          </div>
+          <div class="advice-item"><div class="advice-bullet"></div><div class="advice-text" data-t="adv1"><strong>Skip irrigation today & tomorrow</strong> — Heavy rain (90%+) expected. Delaying saves approx. ₹800 in water costs for 2.5 acres.</div></div>
+          <div class="advice-item"><div class="advice-bullet"></div><div class="advice-text" data-t="adv2"><strong>Postpone pesticide spray</strong> until Thursday — Rain washes off chemicals. Apply on Thursday/Friday when weather is clear and effective.</div></div>
+          <div class="advice-item"><div class="advice-bullet"></div><div class="advice-text" data-t="adv3"><strong>High blast risk</strong> — Monsoon conditions (humidity 80%+, temp 25-30°C) are ideal for fungal spread. Apply preventive Tricyclazole TODAY before the rain.</div></div>
+          <div class="advice-item"><div class="advice-bullet"></div><div class="advice-text" data-t="adv4"><strong>Harvest window</strong> — If your crop is near maturity, harvest on Thursday-Friday when skies clear. Avoid harvesting in wet conditions.</div></div>
+        </div>
+      </div>
+
+      <!-- ===== VOICE ASSISTANT VIEW ===== -->
+      <div class="view" id="view-voice">
+        <div class="page-header">
+          <div class="page-title" data-t="voice_title">🗣️ Voice Assistant</div>
+          <div class="page-subtitle" data-t="voice_sub">Ask anything about farming in Malayalam or English</div>
+        </div>
+        <div class="voice-center">
+          <div class="mic-container" id="mic-btn">
+            <div class="mic-ripple r1"></div>
+            <div class="mic-ripple r2"></div>
+            <div class="mic-ripple r3"></div>
+            <div class="mic-core" id="mic-core" onclick="toggleVoice()">
+              <i class="fa fa-microphone" id="mic-icon"></i>
+            </div>
+          </div>
+          <div class="voice-status" id="voice-status" data-t="tap_to_speak">Tap to Speak</div>
+          <div class="waveform" id="waveform">
+            <div class="wave-bar" style="height:10px"></div>
+            <div class="wave-bar" style="height:18px"></div>
+            <div class="wave-bar" style="height:28px"></div>
+            <div class="wave-bar" style="height:35px"></div>
+            <div class="wave-bar" style="height:28px"></div>
+            <div class="wave-bar" style="height:18px"></div>
+            <div class="wave-bar" style="height:10px"></div>
+          </div>
+          <div class="voice-hint" id="voice-hint" data-t="voice_instruction">Hold to speak, release when done. Supports Malayalam & English</div>
+          <div class="transcript-box" id="transcript-box">
+            <div class="transcript-label" data-t="you_said">You Said</div>
+            <div class="transcript-text" id="transcript-text"></div>
+          </div>
+          <div class="ai-response-box" id="ai-response-box">
+            <div class="ai-response-label"><i class="fa fa-robot"></i> <span data-t="krishimitra_says">KrishiMitra AI</span></div>
+            <div class="ai-response-text" id="ai-response-text"></div>
+          </div>
+          <div class="voice-examples">
+            <div class="voice-pill" onclick="simulateVoice('What should I spray on my paddy today?')" data-t="ex1">What to spray on paddy?</div>
+            <div class="voice-pill" onclick="simulateVoice('Will it rain today in Kottayam?')" data-t="ex2">Will it rain today?</div>
+            <div class="voice-pill" onclick="simulateVoice('What is the paddy price today?')" data-t="ex3">Today's paddy price?</div>
+            <div class="voice-pill" onclick="simulateVoice('My plant leaves are turning yellow. What is the disease?')" data-t="ex4">Yellow leaves issue</div>
+            <div class="voice-pill" onclick="simulateVoice('When should I harvest my paddy?')" data-t="ex5">Harvest time?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== MARKET INSIGHTS VIEW ===== -->
+      <div class="view" id="view-market">
+        <div class="page-header">
+          <div class="page-title" data-t="market_title">📊 Market Insights</div>
+          <div class="page-subtitle" id="market-updated" data-t="market_sub">Live mandi prices · Updated today</div>
+        </div>
+        <div class="market-header">
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap" id="market-filters">
+            <button class="filter-btn active" onclick="filterMarket('all',this)" data-t="all_crops">All Crops</button>
+            <button class="filter-btn" onclick="filterMarket('grains',this)" data-t="grains">Grains</button>
+            <button class="filter-btn" onclick="filterMarket('fruits',this)" data-t="fruits">Fruits</button>
+            <button class="filter-btn" onclick="filterMarket('spices',this)" data-t="spices">Spices</button>
+            <button class="filter-btn" onclick="filterMarket('others',this)" data-t="others">Others</button>
+          </div>
+          <div style="font-size:.82rem;font-weight:700;color:var(--t4);display:flex;align-items:center;gap:.35rem">
+            <i class="fa fa-circle" style="font-size:.5rem;color:#22c55e"></i> <span data-t="live_data">Live Data</span>
+          </div>
+        </div>
+        <div class="market-grid" id="market-grid"></div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fa fa-lightbulb" style="color:var(--acc2)"></i> <span data-t="selling_strategy">AI Selling Strategy</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.875rem">
+            <div style="padding:.875rem;background:var(--g50);border:1px solid var(--g200);border-radius:var(--r12)">
+              <div style="font-size:1.2rem;margin-bottom:.4rem">🌾</div>
+              <div style="font-weight:800;font-size:.88rem;color:var(--t1);margin-bottom:.25rem" data-t="paddy_advice">Paddy — Sell NOW</div>
+              <div style="font-size:.78rem;color:var(--t3);line-height:1.5" data-t="paddy_advice_text">Prices at 6-month high. Expected to drop 5-8% post-harvest season in 2 weeks.</div>
+            </div>
+            <div style="padding:.875rem;background:#FEF3C7;border:1px solid #FDE68A;border-radius:var(--r12)">
+              <div style="font-size:1.2rem;margin-bottom:.4rem">🥥</div>
+              <div style="font-weight:800;font-size:.88rem;color:var(--t1);margin-bottom:.25rem" data-t="coconut_advice">Coconut — HOLD</div>
+              <div style="font-size:.78rem;color:var(--t3);line-height:1.5" data-t="coconut_advice_text">Festival season (Onam) approaching in 3 weeks. Prices expected to rise 15-20%.</div>
+            </div>
+            <div style="padding:.875rem;background:#DBEAFE;border:1px solid #BFDBFE;border-radius:var(--r12)">
+              <div style="font-size:1.2rem;margin-bottom:.4rem">🍌</div>
+              <div style="font-weight:800;font-size:.88rem;color:var(--t1);margin-bottom:.25rem" data-t="banana_advice">Banana — SELL in 5 days</div>
+              <div style="font-size:.78rem;color:var(--t3);line-height:1.5" data-t="banana_advice_text">Strong demand from Kottayam APMC. Price peak expected Thursday-Friday.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== NOTIFICATIONS VIEW ===== -->
+      <div class="view" id="view-notifications">
+        <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+          <div>
+            <div class="page-title" data-t="notif_title">🔔 Notifications</div>
+            <div class="page-subtitle" data-t="notif_sub">Your farming alerts and updates</div>
+          </div>
+          <button onclick="markAllRead()" style="padding:.5rem 1rem;border:1px solid var(--bdr);border-radius:var(--r8);font-size:.8rem;font-weight:700;background:var(--surf);color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:.4rem;margin-top:.25rem" data-t="mark_all_read">
+            <i class="fa fa-check-double"></i> Mark All Read
+          </button>
+        </div>
+        <div class="notif-filters">
+          <button class="filter-btn active" onclick="filterNotif('all',this)" data-t="all">All</button>
+          <button class="filter-btn" onclick="filterNotif('weather',this)" data-t="weather_alerts">Weather</button>
+          <button class="filter-btn" onclick="filterNotif('disease',this)" data-t="disease_alerts">Disease</button>
+          <button class="filter-btn" onclick="filterNotif('market',this)" data-t="market_alerts">Market</button>
+          <button class="filter-btn" onclick="filterNotif('advisory',this)" data-t="advisory_alerts">Advisory</button>
+        </div>
+        <div class="notif-list" id="notif-list"></div>
+      </div>
+
+    </div><!-- end main-content -->
+  </main>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="mobile-nav">
+    <div class="mob-nav-item active" onclick="navigate('dashboard')" id="mob-dashboard"><i class="fa fa-house"></i><span>Home</span></div>
+    <div class="mob-nav-item" onclick="navigate('crop')" id="mob-crop"><i class="fa fa-seedling"></i><span>Crops</span></div>
+    <div class="mob-nav-item" onclick="navigate('disease')" id="mob-disease"><i class="fa fa-microscope"></i><span>Detect</span></div>
+    <div class="mob-nav-item" onclick="navigate('voice')" id="mob-voice"><i class="fa fa-microphone"></i><span>Voice</span></div>
+    <div class="mob-nav-item" onclick="navigate('market')" id="mob-market"><i class="fa fa-chart-line"></i><span>Market</span></div>
+  </nav>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toasts"></div>
+
+<script>
+// ===== APP STATE =====
+let currentView = 'dashboard';
+let currentLang = 'en';
+let voiceState = 'idle';
+let recognition = null;
+let voiceTimer = null;
+
+// ===== TRANSLATIONS =====
+const T = {
+  en: {
+    tagline:'Your Smart Farming Companion', feat1:'AI-Powered Crop Advisory', feat2:'Instant Disease Detection',
+    feat3:'Weather-Smart Decisions', feat4:'Malayalam Voice Assistant', welcome:'Welcome Back',
+    welcome_sub:'Sign in to your KrishiMitra account', login:'Login', signup:'Sign Up',
+    phone:'Phone Number', password:'Password', remember:'Remember me', forgot:'Forgot Password?',
+    login_btn:'Login to Dashboard', or:'or continue with', demo:'Try Demo Account',
+    terms:'By signing in, you agree to our Terms & Privacy Policy', user_name:'Rajan Kumar',
+    farmer_role:'Verified Farmer', main_nav:'Main', dashboard:'Dashboard', crop_advisory:'Crop Advisory',
+    disease_detection:'Disease Detection', tools_nav:'Tools', weather:'Weather',
+    voice_assistant:'Voice Assistant', market_insights:'Market Insights', notifications:'Notifications',
+    dark_mode:'Dark Mode', kottayam:'Kottayam, Kerala', partly_cloudy:'Partly Cloudy · Feels 31°C',
+    weather_ai_tip:'Delay irrigation today. Natural rainfall expected. Save 40% water.',
+    quick_prices:'Quick Prices', more:'More', active_crops:'Active Crops', on_track:'All on track',
+    disease_alerts:'Disease Alert', check_now:'Check now', temperature:'Temperature',
+    rain_expected:'Rain expected', paddy_price:'Paddy Price/Qt', today:'Today',
+    todays_tasks:"Today's Tasks", view_all:'View All', task1:'Apply fertilizer to Field A (East Plot)',
+    task2:'Inspect irrigation pipes in Field B', task3:'Spray neem oil on coconut trees (disease prevention)',
+    task4:'Take soil sample from Field C for testing', recent_alerts:'Recent Alerts', see_all:'See All',
+    alert1:'Blast disease risk HIGH in your area. Preventive spray recommended.',
+    alert2:'Heavy rain forecast tomorrow. Delay planned pesticide application.',
+    alert3:'Paddy prices up 3.2% at Kottayam APMC. Good time to sell.',
+    greeting_name:'👋 Namaskaram, Rajan Kumar!',
+    greeting_sub:'Your paddy field needs attention today. Check your tasks below.',
+    search_placeholder:'Search crops, diseases...',
+    crop_advisory_title:'🌱 Crop Advisory', crop_advisory_sub:'Get AI-powered recommendations for your crops',
+    crop_details:'Crop Details', crop_type:'Crop Type', soil_type:'Soil Type', growth_stage:'Growth Stage',
+    location:'Location / District', land_area:'Land Area', issues:'Current Issues (optional)',
+    issues_placeholder:'Describe any problems you\'re facing...', get_advisory:'Get AI Advisory',
+    ai_recommendations:'AI Recommendations', high_confidence:'92% Match',
+    rec1_title:'Fertilizer Application', rec1_text:'Apply NPK 17:17:17 at 50kg/acre. Split in 3 doses — basal, tillering, and panicle initiation. Current vegetative stage needs high nitrogen.',
+    rec2_title:'Irrigation Schedule', rec2_text:'Maintain 5cm water level. With forecasted rain tomorrow, skip today\'s irrigation. Resume Thursday if no rainfall. Saves 40% water.',
+    rec3_title:'Disease Prevention', rec3_text:'Blast risk HIGH in your area. Spray Tricyclazole 75% WP at 0.6g/L. Apply during early morning or late evening. Do NOT spray before rain.',
+    rec4_title:'Harvest Timing', rec4_text:'Expected maturity in 28-32 days. Monitor grain moisture (target 20-22%). Harvest when 80% grains turn golden. Prices projected to rise 8% next month.',
+    seasonal_tips:'Seasonal Tips', tip1:'Monsoon moisture increases fungal risk. Ensure proper drainage around field boundaries.',
+    tip2:'Stem borer activity peaks this season. Install pheromone traps (1 per 5 acres) as early warning.',
+    tip3:'Weeds grow fast in wet season. First weeding at 15-20 days after transplanting is critical.',
+    disease_title:'🔬 Disease Detection', disease_sub:'Upload a photo to identify plant diseases instantly',
+    upload_image:'Upload Plant Image', upload_title:'Take or Upload a Photo',
+    upload_hint:'Drag & drop or click to browse\nSupports JPG, PNG up to 10MB', choose_photo:'Choose Photo',
+    try_samples:'Try Sample Images', blast_sample:'Blast Sample', blight_sample:'Blight Sample', healthy_sample:'Healthy Plant',
+    analysis_result:'Analysis Result', confidence:'Confidence', treatment_steps:'Treatment Steps',
+    prevention:'Prevention Tips', prev1:'Use certified disease-free seeds. Treat seeds with Carbendazim before sowing.',
+    prev2:'Avoid excessive nitrogen. High N increases disease susceptibility by 40%.',
+    prev3:'Plant resistant varieties: Jyothi, Karthika, or Uma for blast-prone areas.',
+    prev4:'Drain fields periodically to reduce humidity at plant base. Key prevention strategy.',
+    weather_title:'🌦️ Weather Module', weather_sub:'Real-time weather data with AI-powered farming decisions',
+    location_name:'Kottayam, Kerala', weather_cond:'Partly Cloudy', feels_like:'Feels like 31°C · Humidity 82%',
+    high_low:'H:30° L:24°', uv_index:'UV: Moderate', humidity:'Humidity', wind:'Wind Speed',
+    rain_chance:'Rain Chance', uv:'UV Index', '7day_forecast':'7-Day Forecast',
+    today_short:'Today', ai_farming_advisor:'AI Farming Advisor', based_on_weather:'Based on 7-day weather forecast',
+    adv1:'<strong>Skip irrigation today & tomorrow</strong> — Heavy rain (90%+) expected. Delaying saves approx. ₹800 in water costs for 2.5 acres.',
+    adv2:'<strong>Postpone pesticide spray</strong> until Thursday — Rain washes off chemicals. Apply on Thursday/Friday when weather is clear and effective.',
+    adv3:'<strong>High blast risk</strong> — Monsoon conditions (humidity 80%+, temp 25-30°C) are ideal for fungal spread. Apply preventive Tricyclazole TODAY before the rain.',
+    adv4:'<strong>Harvest window</strong> — If your crop is near maturity, harvest on Thursday-Friday when skies clear. Avoid harvesting in wet conditions.',
+    voice_title:'🗣️ Voice Assistant', voice_sub:'Ask anything about farming in Malayalam or English',
+    tap_to_speak:'Tap to Speak', voice_instruction:'Hold to speak, release when done. Supports Malayalam & English',
+    you_said:'You Said', krishimitra_says:'KrishiMitra AI',
+    ex1:'What to spray on paddy?', ex2:'Will it rain today?', ex3:"Today's paddy price?",
+    ex4:'Yellow leaves issue', ex5:'Harvest time?',
+    market_title:'📊 Market Insights', market_sub:'Live mandi prices · Updated today',
+    all_crops:'All Crops', grains:'Grains', fruits:'Fruits', spices:'Spices', others:'Others',
+    live_data:'Live Data', selling_strategy:'AI Selling Strategy',
+    paddy_advice:'Paddy — Sell NOW', paddy_advice_text:'Prices at 6-month high. Expected to drop 5-8% post-harvest season in 2 weeks.',
+    coconut_advice:'Coconut — HOLD', coconut_advice_text:'Festival season (Onam) approaching in 3 weeks. Prices expected to rise 15-20%.',
+    banana_advice:'Banana — SELL in 5 days', banana_advice_text:'Strong demand from Kottayam APMC. Price peak expected Thursday-Friday.',
+    notif_title:'🔔 Notifications', notif_sub:'Your farming alerts and updates',
+    mark_all_read:'Mark All Read', all:'All', weather_alerts:'Weather', disease_alerts2:'Disease',
+    market_alerts:'Market', advisory_alerts:'Advisory',
+  },
+  ml: {
+    tagline:'നിങ്ങളുടെ സ്മാർട്ട് കൃഷി സഹായി', feat1:'AI കൃഷി ഉപദേശം', feat2:'തൽക്ഷണ രോഗ നിർണ്ണയം',
+    feat3:'കാലാവസ്ഥ അടിസ്ഥാന തീരുമാനങ്ങൾ', feat4:'മലയാളം വോയ്‌സ് അസിസ്റ്റന്റ്',
+    welcome:'സ്വാഗതം', welcome_sub:'നിങ്ങളുടെ KrishiMitra അക്കൗണ്ടിൽ ലോഗിൻ ചെയ്യുക',
+    login:'ലോഗിൻ', signup:'രജിസ്ട്രേഷൻ', phone:'ഫോൺ നമ്പർ', password:'പാസ്‌വേർഡ്',
+    remember:'ഓർക്കൂ', forgot:'പാസ്‌വേർഡ് മറന്നോ?', login_btn:'ഡാഷ്ബോർഡിലേക്ക് ലോഗിൻ',
+    or:'അല്ലെങ്കിൽ', demo:'ഡെമോ അക്കൗണ്ട് ഉപയോഗിക്കൂ',
+    terms:'ലോഗിൻ ചെയ്യുന്നതിലൂടെ നിങ്ങൾ നിബന്ധനകളോട് യോജിക്കുന്നു',
+    user_name:'രാജൻ കുമാർ', farmer_role:'സർട്ടിഫൈഡ് കർഷകൻ',
+    main_nav:'പ്രധാനം', dashboard:'ഡാഷ്ബോർഡ്', crop_advisory:'കൃഷി ഉപദേശം',
+    disease_detection:'രോഗ നിർണ്ണയം', tools_nav:'ഉപകരണങ്ങൾ', weather:'കാലാവസ്ഥ',
+    voice_assistant:'വോയ്‌സ് അസിസ്റ്റന്റ്', market_insights:'വിപണി ദർശനം',
+    notifications:'അറിയിപ്പുകൾ', dark_mode:'ഡാർക്ക് മോഡ്',
+    kottayam:'കോട്ടയം, കേരളം', partly_cloudy:'ഭാഗികമായി മേഘാവൃതം · 31°C അനുഭവപ്പെടുന്നു',
+    weather_ai_tip:'ഇന്ന് ജലസേചനം മാറ്റിവയ്ക്കൂ. മഴ പ്രതീക്ഷിക്കുന്നു. 40% വെള്ളം ലാഭിക്കൂ.',
+    quick_prices:'വേഗ വില', more:'കൂടുതൽ', active_crops:'സജീവ വിളകൾ', on_track:'ശരിയായ ദിശയിൽ',
+    disease_alerts:'രോഗ മുന്നറിയിപ്പ്', check_now:'ഇപ്പോൾ പരിശോധിക്കൂ',
+    temperature:'താപനില', rain_expected:'മഴ പ്രതീക്ഷിക്കുന്നു', paddy_price:'നെല്ല് വില/ക്വിന്റൽ',
+    today:'ഇന്ന്', todays_tasks:'ഇന്നത്തെ ജോലികൾ', view_all:'എല്ലാം കാണൂ',
+    task1:'ഫീൽഡ് A-ൽ വളം ഇടൂ (കിഴക്കൻ ഭൂഖണ്ഡം)', task2:'ഫീൽഡ് B-ൽ ജലസേചന കുഴലുകൾ പരിശോധിക്കൂ',
+    task3:'തെങ്ങുകളിൽ വേപ്പ് എണ്ണ തളിക്കൂ (രോഗ പ്രതിരോധം)', task4:'ഫീൽഡ് C-ൽ നിന്ന് മണ്ണ് സാമ്പിൾ എടുക്കൂ',
+    recent_alerts:'സമീപകാല അലേർട്ടുകൾ', see_all:'എല്ലാം കാണൂ',
+    alert1:'നിങ്ങളുടെ പ്രദേശത്ത് ബ്ലാസ്റ്റ് രോഗം ഉയർന്ന അപകടം. പ്രതിരോധ സ്പ്രേ ശുപാർശ.',
+    alert2:'നാളെ ശക്തമായ മഴ. ആസൂത്രിത കീടനാശിനി തളിക്കൽ മാറ്റിവക്കൂ.',
+    alert3:'കോട്ടയം APMC-ൽ നെല്ല് വില 3.2% ഉയർന്നു. വിൽക്കാൻ നല്ല സമയം.',
+    greeting_name:'👋 നമസ്കാരം, രാജൻ കുമാർ!',
+    greeting_sub:'നിങ്ങളുടെ നെൽവയൽ ഇന്ന് ശ്രദ്ധ ആവശ്യപ്പെടുന്നു. ജോലികൾ പരിശോധിക്കൂ.',
+    search_placeholder:'വിളകൾ, രോഗങ്ങൾ തിരയൂ...',
+    crop_advisory_title:'🌱 കൃഷി ഉപദേശം', crop_advisory_sub:'AI അടിസ്ഥാനമാക്കിയ ശുപാർശകൾ നേടൂ',
+    crop_details:'വിള വിവരങ്ങൾ', crop_type:'വിള തരം', soil_type:'മണ്ണ് തരം',
+    growth_stage:'വളർച്ചാ ഘട്ടം', location:'സ്ഥലം / ജില്ല', land_area:'ഭൂ വിസ്തൃതി',
+    issues:'നിലവിലെ പ്രശ്‌നങ്ങൾ (ഓപ്ഷണൽ)', issues_placeholder:'നിങ്ങൾ അനുഭവിക്കുന്ന പ്രശ്‌നങ്ങൾ വിവരിക്കൂ...',
+    get_advisory:'AI ഉപദേശം നേടൂ', ai_recommendations:'AI ശുപാർശകൾ', high_confidence:'92% പൊരുത്തം',
+    rec1_title:'വളം പ്രയോഗം', rec1_text:'NPK 17:17:17 50kg/ഏക്കർ ഇടൂ. 3 ഡോസുകളായി — അടിസ്ഥാനം, ടില്ലറിംഗ്, പ്രാരംഭ ഘട്ടം. ഇപ്പോഴത്തെ ഘട്ടത്തിൽ ഉയർന്ന നൈട്രജൻ ആവശ്യം.',
+    rec2_title:'ജലസേചന ഷെഡ്യൂൾ', rec2_text:'5cm വെള്ളം നിലനിർത്തൂ. നാളെ മഴ പ്രതീക്ഷിക്കുന്നതിനാൽ ഇന്ന് ജലസേചനം ഒഴിവാക്കൂ. 40% വെള്ളം ലാഭിക്കൂ.',
+    rec3_title:'രോഗ പ്രതിരോധം', rec3_text:'ബ്ലാസ്റ്റ് അപകടം ഉയർന്നതാണ്. Tricyclazole 75% WP 0.6g/L-ൽ തളിക്കൂ. രാവിലെ അല്ലെങ്കിൽ വൈകുന്നേരം ഇടൂ. മഴക്ക് മുമ്പ് തളിക്കരുത്.',
+    rec4_title:'വിളവെടുപ്പ് സമയം', rec4_text:'28-32 ദിവസത്തിൽ പക്വത. ധാന്യ ഈർപ്പം നിരീക്ഷിക്കൂ (ലക്ഷ്യം 20-22%). 80% ധാന്യം സ്വർണ്ണ നിറമാകുമ്പോൾ വിളവെടുക്കൂ.',
+    seasonal_tips:'സീസൺ നുറുങ്ങുകൾ',
+    tip1:'മൺസൂൺ ഈർപ്പം ഫംഗൽ അപകടം വർദ്ധിപ്പിക്കുന്നു. ശരിയായ ഡ്രൈനേജ് ഉറപ്പ് വരുത്തൂ.',
+    tip2:'ഈ സീസണിൽ തണ്ടൽ ചെള്ള് കൂടുതലാണ്. ഫിറോമോൺ കെണി ഉപയോഗിക്കൂ (5 ഏക്കർക്ക് 1).',
+    tip3:'നനഞ്ഞ കാലത്ത് കളകൾ വേഗം വളരും. ഒരു കളപ്പറ്റ് നിർണ്ണായകമാണ്.',
+    disease_title:'🔬 രോഗ നിർണ്ണയം', disease_sub:'ഫോട്ടോ അപ്‌ലോഡ് ചെയ്ത് സസ്യ രോഗങ്ങൾ ഉടൻ കണ്ടുപിടിക്കൂ',
+    upload_image:'സസ്യ ചിത്രം അപ്‌ലോഡ് ചെയ്യൂ', upload_title:'ഫോട്ടോ എടുക്കൂ അല്ലെങ്കിൽ അപ്‌ലോഡ് ചെയ്യൂ',
+    upload_hint:'ഡ്രാഗ് & ഡ്രോപ്പ് ചെയ്യൂ അല്ലെങ്കിൽ ബ്രൗസ് ക്ലിക്ക് ചെയ്യൂ', choose_photo:'ഫോട്ടോ തിരഞ്ഞെടുക്കൂ',
+    try_samples:'സാമ്പിൾ ഇമേജ് ഉപയോഗിക്കൂ', blast_sample:'ബ്ലാസ്റ്റ് സാമ്പിൾ', blight_sample:'ബ്ലൈറ്റ് സാമ്പിൾ', healthy_sample:'ആരോഗ്യകരമായ സസ്യം',
+    analysis_result:'വിശകലന ഫലം', confidence:'ആത്മവിശ്വാസം', treatment_steps:'ചികിത്സ ഘട്ടങ്ങൾ',
+    prevention:'പ്രതിരോധ നുറുങ്ങുകൾ', prev1:'സർട്ടിഫൈഡ് വിത്ത് ഉപയോഗിക്കൂ. Carbendazim ഉപചരിക്കൂ.',
+    prev2:'അമിതമായ നൈട്രജൻ ഒഴിവാക്കൂ. ഉയർന്ന N രോഗ സാധ്യത 40% വർദ്ധിപ്പിക്കുന്നു.',
+    prev3:'ജ്യോതി, കാർത്തിക, ഉമ - ബ്ലാസ്റ്റ് പ്രതിരോധ ഇനങ്ങൾ നടൂ.',
+    prev4:'ഇടയ്ക്ക് വെള്ളം ഒഴുക്കൂ. ഈർപ്പം കുറക്കൂ. പ്രധാന പ്രതിരോധ തന്ത്രം.',
+    weather_title:'🌦️ കാലാവസ്ഥ', weather_sub:'AI അടിസ്ഥാനമാക്കിയ കൃഷി തീരുമാനങ്ങളുള്ള ലൈവ് ഡാറ്റ',
+    location_name:'കോട്ടയം, കേരളം', weather_cond:'ഭാഗികമായി മേഘാവൃതം',
+    feels_like:'31°C അനുഭവപ്പെടുന്നു · ഈർപ്പം 82%', high_low:'കൂടുതൽ:30° കുറവ്:24°',
+    uv_index:'UV: മിതമായ', humidity:'ഈർപ്പം', wind:'കാറ്റ് വേഗം', rain_chance:'മഴ സാധ്യത', uv:'UV സൂചിക',
+    '7day_forecast':'7 ദിവസ പ്രവചനം', today_short:'ഇന്ന്',
+    ai_farming_advisor:'AI കൃഷി ഉപദേഷ്ടാവ്', based_on_weather:'7-ദിവസ കാലാവസ്ഥ പ്രവചനം അടിസ്ഥാനമാക്കി',
+    adv1:'<strong>ഇന്നും നാളെയും ജലസേചനം ഒഴിവാക്കൂ</strong> — ശക്തമായ മഴ (90%+) പ്രതീക്ഷിക്കുന്നു. 2.5 ഏക്കറിന് ₹800 ലാഭിക്കൂ.',
+    adv2:'<strong>കീടനാശിനി തളിക്കൽ വ്യാഴം വരെ മാറ്റിവക്കൂ</strong> — മഴ കെമിക്കൽ കഴുകിക്കളയുന്നു.',
+    adv3:'<strong>ഉയർന്ന ബ്ലാസ്റ്റ് അപകടം</strong> — മൺസൂൺ സ്ഥിതി ഫംഗൽ വ്യാപനത്തിന് അനുകൂലം. ഇന്ന് Tricyclazole ഇടൂ.',
+    adv4:'<strong>വിളവെടുപ്പ് വിൻഡോ</strong> — വ്യാഴം-വെള്ളി ദിവസം ആകാശം തെളിയുമ്പോൾ വിളവെടുക്കൂ.',
+    voice_title:'🗣️ വോയ്‌സ് അസിസ്റ്റന്റ്', voice_sub:'മലയാളത്തിൽ അല്ലെങ്കിൽ ഇംഗ്ലീഷിൽ കൃഷി ചോദ്യങ്ങൾ ചോദിക്കൂ',
+    tap_to_speak:'ടാപ്പ് ചെയ്ത് സംസാരിക്കൂ', voice_instruction:'പിടിക്കൂ, കഴിഞ്ഞ് വിടൂ. മലയാളം & ഇംഗ്ലീഷ് പിന്തുണക്കുന്നു',
+    you_said:'നിങ്ങൾ പറഞ്ഞത്', krishimitra_says:'KrishiMitra AI',
+    ex1:'നെൽകൃഷിയിൽ എന്ത് തളിക്കണം?', ex2:'ഇന്ന് മഴ ഉണ്ടാകുമോ?',
+    ex3:'ഇന്നത്തെ നെല്ല് വില?', ex4:'മഞ്ഞ ഇല പ്രശ്‌നം', ex5:'വിളവെടുപ്പ് സമയം?',
+    market_title:'📊 വിപണി ദർശനം', market_sub:'ലൈവ് മണ്ടി വിലകൾ · ഇന്ന് അപ്‌ഡേറ്റ് ചെയ്തത്',
+    all_crops:'എല്ലാ വിളകളും', grains:'ധാന്യങ്ങൾ', fruits:'പഴങ്ങൾ', spices:'സുഗന്ധദ്രവ്യങ്ങൾ', others:'മറ്റുള്ളവ',
+    live_data:'ലൈവ് ഡാറ്റ', selling_strategy:'AI വിൽപ്പന തന്ത്രം',
+    paddy_advice:'നെല്ല് — ഇപ്പോൾ വിൽക്കൂ', paddy_advice_text:'6 മാസത്തെ ഉയർന്ന വില. 2 ആഴ്ചയ്ക്ക് ശേഷം 5-8% കുറഞ്ഞേക്കാം.',
+    coconut_advice:'തേങ്ങ — പിടിക്കൂ', coconut_advice_text:'ഓണം (3 ആഴ്ച) അടുക്കുന്നു. 15-20% വില ഉയർന്നേക്കാം.',
+    banana_advice:'വാഴ — 5 ദിവസത്തിൽ വിൽക്കൂ', banana_advice_text:'കോട്ടയം APMC-ൽ ഉയർന്ന ഡിമാൻഡ്. വ്യാഴം-വെള്ളി ഉച്ചകോടി.',
+    notif_title:'🔔 അറിയിപ്പുകൾ', notif_sub:'നിങ്ങളുടെ കൃഷി അലേർട്ടുകളും അപ്‌ഡേറ്റുകളും',
+    mark_all_read:'എല്ലാം വായിച്ചു', all:'എല്ലാം', weather_alerts:'കാലാവസ്ഥ',
+    disease_alerts2:'രോഗം', market_alerts:'വിപണി', advisory_alerts:'ഉപദേശം',
+  }
+};
+
+function t(key){ return (T[currentLang]||T.en)[key]||(T.en[key])||key; }
+
+function applyTranslations(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key=el.dataset.t;
+    const val=t(key);
+    if(el.tagName==='INPUT') return;
+    el.innerHTML=val||el.textContent;
+  });
+  document.querySelectorAll('[data-t-placeholder]').forEach(el=>{
+    const key=el.dataset.tPlaceholder;
+    el.placeholder=t(key)||el.placeholder;
+  });
+}
+
+// ===== AUTH =====
+function switchTab(tab){
+  document.getElementById('login-form').style.display=tab==='login'?'block':'none';
+  document.getElementById('signup-form').style.display=tab==='signup'?'block':'none';
+  document.querySelectorAll('.auth-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='login'&&i===0)||(tab==='signup'&&i===1)));
+}
+
+function togglePw(){
+  const inp=document.getElementById('pw-input');
+  const ico=document.getElementById('pw-icon');
+  inp.type=inp.type==='password'?'text':'password';
+  ico.className=inp.type==='password'?'fa fa-eye':'fa fa-eye-slash';
+}
+
+function doLogin(){
+  const btn=document.querySelector('.btn-primary');
+  btn.innerHTML='<div class="spinner"></div> Signing in...';
+  setTimeout(()=>{
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    initApp();
+    showToast('🌾 Welcome to KrishiMitra AI!');
+  },1500);
+}
+
+function doLogout(){
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('auth-screen').classList.remove('hidden');
+  document.querySelector('.btn-primary').innerHTML='<span>Login to Dashboard</span><i class="fa fa-arrow-right"></i>';
+}
+
+// ===== NAVIGATION =====
+function navigate(view){
+  currentView=view;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const el=document.getElementById('view-'+view);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navEl=document.getElementById('nav-'+view);
+  if(navEl) navEl.classList.add('active');
+  document.querySelectorAll('.mob-nav-item').forEach(n=>n.classList.remove('active'));
+  const mobEl=document.getElementById('mob-'+view);
+  if(mobEl) mobEl.classList.add('active');
+  const titles={
+    dashboard:t('dashboard'), crop:t('crop_advisory'), disease:t('disease_detection'),
+    weather:t('weather'), voice:t('voice_assistant'), market:t('market_insights'),
+    notifications:t('notifications')
+  };
+  document.getElementById('topbar-title').textContent=titles[view]||view;
+  closeSidebar();
+  window.scrollTo(0,0);
+}
+
+// ===== SIDEBAR =====
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('close-sidebar-btn').style.display='block';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('close-sidebar-btn').style.display='none';
+}
+
+// ===== THEME =====
+function toggleTheme(){
+  const dark=document.documentElement.dataset.theme==='dark';
+  document.documentElement.dataset.theme=dark?'light':'dark';
+  document.getElementById('theme-toggle').checked=!dark;
+}
+
+// ===== LANGUAGE =====
+function setLang(lang){
+  currentLang=lang;
+  document.getElementById('lang-en').classList.toggle('active',lang==='en');
+  document.getElementById('lang-ml').classList.toggle('active',lang==='ml');
+  applyTranslations();
+  const titles={
+    dashboard:t('dashboard'), crop:t('crop_advisory'), disease:t('disease_detection'),
+    weather:t('weather'), voice:t('voice_assistant'), market:t('market_insights'),
+    notifications:t('notifications')
+  };
+  document.getElementById('topbar-title').textContent=titles[currentView]||currentView;
+}
+
+// ===== GREETINGS =====
+function setGreeting(){
+  const h=new Date().getHours();
+  let g='Good Morning';
+  if(h>=12&&h<17) g='Good Afternoon';
+  else if(h>=17) g='Good Evening';
+  if(currentLang==='ml'){
+    if(h<12) g='സുപ്രഭാതം';
+    else if(h<17) g='ഉച്ചക്ക് ശേഷം';
+    else g='ഒരു നല്ല വൈകുന്നേരം';
+  }
+  const el=document.getElementById('greeting-time');
+  if(el) el.textContent=g;
+  const wt=document.getElementById('weather-time');
+  if(wt) wt.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+
+// ===== TASK TOGGLE =====
+function toggleTask(el){
+  el.classList.toggle('done');
+  if(el.classList.contains('done')){
+    el.innerHTML='<i class="fa fa-check" style="font-size:.7rem"></i>';
+    el.nextElementSibling.querySelector('.task-text').style.textDecoration='line-through';
+    el.nextElementSibling.querySelector('.task-text').style.opacity='.5';
+  } else {
+    el.innerHTML='';
+    el.nextElementSibling.querySelector('.task-text').style.textDecoration='none';
+    el.nextElementSibling.querySelector('.task-text').style.opacity='1';
+  }
+}
+
+// ===== CROP ADVISORY =====
+function getAdvisory(){
+  const btn=document.getElementById('advisory-btn');
+  btn.innerHTML='<div class="spinner"></div> <span>Analyzing...</span>';
+  btn.disabled=true;
+  document.getElementById('advisory-skeleton').style.display='block';
+  document.getElementById('advisory-result').classList.remove('show');
+  setTimeout(()=>{
+    document.getElementById('advisory-skeleton').style.display='none';
+    document.getElementById('advisory-result').classList.add('show');
+    btn.innerHTML='<i class="fa fa-wand-magic-sparkles"></i> <span>'+t('get_advisory')+'</span>';
+    btn.disabled=false;
+    showToast('✅ AI Advisory generated!');
+  },2200);
+}
+
+// ===== DISEASE DETECTION =====
+const diseases = {
+  blast:{
+    name:'Rice Blast Disease (Magnaporthe oryzae)',
+    confidence:87, icon:'🍃', badge:'87% Confident',
+    treatments:[
+      {num:1,text:'Immediately spray Tricyclazole 75% WP at 0.6g/L. Cover all leaf surfaces thoroughly.'},
+      {num:2,text:'Remove and burn heavily infected plants to prevent spread to neighboring fields.'},
+      {num:3,text:'Drain field for 3-4 days to reduce humidity. Refill once disease is controlled.'},
+      {num:4,text:'Apply silicon-based fertilizer (Silica 300kg/ha) to strengthen plant cell walls.'},
+      {num:5,text:'Repeat spray after 7-10 days if symptoms persist. Monitor daily for 2 weeks.'},
+    ]
+  },
+  blight:{
+    name:'Bacterial Leaf Blight (Xanthomonas)',
+    confidence:91, icon:'🟤', badge:'91% Confident',
+    treatments:[
+      {num:1,text:'Apply Copper Oxychloride 50% WP at 3g/L. Spray under leaf surface also.'},
+      {num:2,text:'Avoid overhead irrigation — switch to drip or furrow to reduce leaf wetness.'},
+      {num:3,text:'Apply potassium at 60kg/ha to improve plant immunity and disease resistance.'},
+      {num:4,text:'Use balanced nutrition — avoid excess nitrogen which favors bacterial growth.'},
+    ]
+  },
+  healthy:{
+    name:'Healthy Plant — No Disease Detected',
+    confidence:96, icon:'✅', badge:'96% Confident',
+    treatments:[
+      {num:1,text:'Your plant appears healthy! Continue your current care routine.'},
+      {num:2,text:'Maintain regular inspection (every 3-4 days) during high-risk monsoon period.'},
+      {num:3,text:'Continue preventive spray schedule to protect against future infections.'},
+    ]
+  }
+};
+
+function handleFileUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    showImagePreview(ev.target.result);
+    analyzeDisease('blast');
+  };
+  reader.readAsDataURL(file);
+}
+
+function useSampleDisease(type){
+  const colors={blast:'#a8d5a2',blight:'#c4855a',healthy:'#7bc67d'};
+  const canvas=document.createElement('canvas');
+  canvas.width=400;canvas.height=300;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle=colors[type]||'#a8d5a2';
+  ctx.fillRect(0,0,400,300);
+  if(type==='blast'||type==='blight'){
+    ctx.fillStyle='rgba(80,40,0,.3)';
+    for(let i=0;i<20;i++){ctx.beginPath();ctx.ellipse(50+Math.random()*300,50+Math.random()*200,8+Math.random()*15,5+Math.random()*10,Math.random()*Math.PI,0,2*Math.PI);ctx.fill();}
+  }
+  showImagePreview(canvas.toDataURL());
+  analyzeDisease(type);
+}
+
+function showImagePreview(src){
+  const pb=document.getElementById('preview-box');
+  const pi=document.getElementById('preview-img');
+  pi.src=src;
+  pb.style.display='block';
+  document.getElementById('upload-zone').style.display='none';
+  document.getElementById('analyzing-overlay').style.display='flex';
+}
+
+function analyzeDisease(type){
+  document.getElementById('disease-result').classList.remove('show');
+  setTimeout(()=>{
+    document.getElementById('analyzing-overlay').style.display='none';
+    const d=diseases[type]||diseases.blast;
+    document.getElementById('disease-name').textContent=d.name;
+    document.getElementById('confidence-pct').textContent=d.confidence+'%';
+    document.getElementById('conf-bar').style.width=d.confidence+'%';
+    document.getElementById('disease-icon').textContent=d.icon;
+    document.getElementById('result-badge').textContent=d.badge;
+    document.getElementById('result-badge').className='badge '+(d.confidence>85?'badge-red':'badge-orange');
+    const list=document.getElementById('treatment-list');
+    list.innerHTML=d.treatments.map(s=>`
+      <div class="treatment-step">
+        <div class="step-num">${s.num}</div>
+        <div class="step-text">${s.text}</div>
+      </div>`).join('');
+    document.getElementById('disease-result').classList.add('show');
+    showToast(type==='healthy'?'✅ Plant is healthy!':'⚠️ Disease detected! See treatment plan.');
+  },2000);
+}
+
+function dragOver(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag')}
+function dragLeave(){document.getElementById('upload-zone').classList.remove('drag')}
+function dropFile(e){
+  e.preventDefault();dragLeave();
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/')){
+    const reader=new FileReader();
+    reader.onload=ev=>{showImagePreview(ev.target.result);analyzeDisease('blast');};
+    reader.readAsDataURL(file);
+  }
+}
+
+// ===== VOICE ASSISTANT =====
+function toggleVoice(){
+  if(voiceState==='idle') startVoice();
+  else stopVoice();
+}
+
+function startVoice(){
+  voiceState='listening';
+  const mic=document.getElementById('mic-btn');
+  const core=document.getElementById('mic-core');
+  const icon=document.getElementById('mic-icon');
+  const status=document.getElementById('voice-status');
+  const wave=document.getElementById('waveform');
+  mic.classList.add('recording');
+  core.classList.add('recording');
+  icon.className='fa fa-stop';
+  status.textContent=currentLang==='ml'?'ശ്രദ്ധിക്കുന്നു...':'Listening...';
+  wave.classList.add('active');
+
+  // Try Web Speech API
+  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    recognition=new SR();
+    recognition.lang=currentLang==='ml'?'ml-IN':'en-IN';
+    recognition.interimResults=true;
+    recognition.onresult=e=>{
+      const t=[...e.results].map(r=>r[0].transcript).join(' ');
+      showTranscript(t);
+    };
+    recognition.onend=()=>processVoice();
+    recognition.onerror=()=>simulateVoice(currentLang==='ml'?'ഇന്ന് നെൽകൃഷിയിൽ എന്ത് ചെയ്യണം?':'What should I do for my paddy field today?');
+    recognition.start();
+    voiceTimer=setTimeout(()=>{if(recognition)recognition.stop();},8000);
+  } else {
+    // Simulate after 2.5s
+    voiceTimer=setTimeout(()=>{
+      simulateVoice(currentLang==='ml'?'ഇന്ന് നെൽകൃഷിയിൽ എന്ത് ചെയ്യണം?':'What should I do for my paddy field today?');
+    },2500);
+  }
+}
+
+function stopVoice(){
+  if(recognition){recognition.stop();recognition=null;}
+  if(voiceTimer){clearTimeout(voiceTimer);voiceTimer=null;}
+  processVoice();
+}
+
+function showTranscript(text){
+  const box=document.getElementById('transcript-box');
+  box.classList.add('show');
+  document.getElementById('transcript-text').textContent=text;
+}
+
+function processVoice(){
+  voiceState='processing';
+  resetMicUI();
+  document.getElementById('voice-status').textContent=currentLang==='ml'?'പ്രോസസ്സ് ചെയ്യുന്നു...':'Processing...';
+  setTimeout(()=>{
+    const transcript=document.getElementById('transcript-text').textContent;
+    if(!transcript) showTranscript(currentLang==='ml'?'ഇന്ന് നെൽകൃഷിയിൽ എന്ത് ചെയ്യണം?':'What should I do for my paddy field today?');
+    showAIResponse(document.getElementById('transcript-text').textContent);
+  },1000);
+}
+
+function simulateVoice(text){
+  if(voiceState!=='idle') resetMicUI();
+  showTranscript(text);
+  voiceState='processing';
+  document.getElementById('voice-status').textContent=currentLang==='ml'?'പ്രോസസ്സ് ചെയ്യുന്നു...':'Processing...';
+  setTimeout(()=>showAIResponse(text),1200);
+}
+
+function showAIResponse(query){
+  voiceState='idle';
+  resetMicUI();
+  document.getElementById('voice-status').textContent=t('tap_to_speak');
+  const responses={
+    'spray':'Based on current weather and disease alerts, spray <strong>Tricyclazole 75% WP (0.6g/L)</strong> on your paddy today (early morning). DO NOT spray tomorrow — heavy rain forecast will wash it off. Spray again in 10 days.',
+    'rain':'Yes! Rain is expected tomorrow in Kottayam with 90% probability. A storm system is approaching from the Arabian Sea. Skip irrigation today and tomorrow. Postpone any spray applications.',
+    'price':'Current paddy price at Kottayam APMC is <strong>₹2,450 per quintal</strong> — up 3.2% from yesterday. This is a 6-month high. Recommend selling 50% of your stock NOW and holding the rest for potential further rise.',
+    'yellow':'Yellow leaves often indicate Nitrogen deficiency or early Bacterial Leaf Blight. Take a close-up photo and use our Disease Detection feature for instant diagnosis. If deficiency: apply Urea at 30kg/acre.',
+    'harvest':'Your paddy is likely 28-32 days from harvest based on your crop profile. Optimal harvest: when 80% of grains turn golden-yellow. Check grain moisture (target 20-22%). Best weather window: this Thursday-Friday.',
+    'default':'For your paddy field today: <strong>(1)</strong> Skip irrigation — rain coming tomorrow. <strong>(2)</strong> Spray preventive Tricyclazole for blast protection — high risk alert active. <strong>(3)</strong> Check your tasks panel for full schedule. Current paddy price is ₹2,450/quintal — good time to sell!'
+  };
+  let response=responses.default;
+  const q=query.toLowerCase();
+  if(q.includes('spray')||q.includes('pesticide')||q.includes('chemical')) response=responses.spray;
+  else if(q.includes('rain')||q.includes('weather')||q.includes('மழை')) response=responses.rain;
+  else if(q.includes('price')||q.includes('sell')||q.includes('market')||q.includes('mandi')||q.includes('വില')) response=responses.price;
+  else if(q.includes('yellow')||q.includes('disease')||q.includes('leaf')||q.includes('problem')||q.includes('മഞ്ഞ')) response=responses.yellow;
+  else if(q.includes('harvest')||q.includes('pick')||q.includes('cut')||q.includes('വിളവ')) response=responses.harvest;
+
+  if(currentLang==='ml'){
+    response='<strong>KrishiMitra AI ഉപദേശം:</strong><br>'+response.replace(/\*\*/g,'<b>').replace(/<strong>/g,'<strong>');
+  }
+  const box=document.getElementById('ai-response-box');
+  box.classList.add('show');
+  document.getElementById('ai-response-text').innerHTML=response;
+  // Speak response
+  if('speechSynthesis' in window){
+    const clean=response.replace(/<[^>]+>/g,'');
+    const utt=new SpeechSynthesisUtterance(clean);
+    utt.lang=currentLang==='ml'?'ml-IN':'en-IN';
+    utt.rate=0.9;
+    window.speechSynthesis.speak(utt);
+  }
+}
+
+function resetMicUI(){
+  document.getElementById('mic-btn').classList.remove('recording');
+  document.getElementById('mic-core').classList.remove('recording');
+  document.getElementById('mic-icon').className='fa fa-microphone';
+  document.getElementById('waveform').classList.remove('active');
+}
+
+// ===== MARKET DATA =====
+const marketData=[
+  {emoji:'🌾',name:'Paddy (Jaya)',place:'Kottayam APMC',price:'₹2,450',unit:'/Quintal',change:'+3.2%',up:true,bars:[60,65,58,70,75,72,80],advice:'Good time to sell — 6-month high!',cat:'grains'},
+  {emoji:'🥥',name:'Coconut',place:'Ernakulam Market',price:'₹25',unit:'/Nut',change:'-1.1%',up:false,bars:[70,75,80,72,68,65,60],advice:'Hold for Onam — price will rise 15%',cat:'fruits'},
+  {emoji:'🍌',name:'Nendran Banana',place:'Thrissur',price:'₹38',unit:'/Kg',change:'+5.8%',up:true,bars:[50,55,60,58,65,70,80],advice:'Sell by Thursday for peak price',cat:'fruits'},
+  {emoji:'🌿',name:'Black Pepper',place:'Kozhikode',price:'₹680',unit:'/Kg',change:'+2.1%',up:true,bars:[65,68,70,72,74,76,80],advice:'Strong export demand — sell now',cat:'spices'},
+  {emoji:'🌳',name:'Rubber',place:'Kottayam',price:'₹185',unit:'/Kg',change:'-0.5%',up:false,bars:[80,78,75,72,70,68,65],advice:'Wait for price recovery — 2 weeks',cat:'others'},
+  {emoji:'🥔',name:'Tapioca (Yuca)',place:'Thiruvananthapuram',price:'₹32',unit:'/Kg',change:'+1.8%',up:true,bars:[40,45,50,55,58,60,65],advice:'Stable demand — sell anytime',cat:'grains'},
+  {emoji:'🌶️',name:'Chilli (Dry)',place:'Palakkad',price:'₹145',unit:'/Kg',change:'+7.2%',up:true,bars:[50,55,58,62,68,75,90],advice:'Highest price in 8 months! Sell ASAP',cat:'spices'},
+  {emoji:'🧅',name:'Onion',place:'Kozhikode',price:'₹42',unit:'/Kg',change:'-3.5%',up:false,bars:[80,75,70,65,60,55,50],advice:'Price dropping — sell remaining stock',cat:'others'},
+];
+
+function renderMarket(filter='all'){
+  const grid=document.getElementById('market-grid');
+  const data=filter==='all'?marketData:marketData.filter(m=>m.cat===filter);
+  grid.innerHTML=data.map(m=>`
+    <div class="market-card">
+      <div class="market-crop">
+        <div class="market-crop-icon">${m.emoji}</div>
+        <div><div class="market-crop-name">${m.name}</div><div class="market-crop-place">${m.place}</div></div>
+      </div>
+      <div class="market-price">${m.price}<span class="market-unit">${m.unit}</span></div>
+      <div class="market-change ${m.up?'price-up':'price-down'}">${m.up?'▲':'▼'} ${m.change} <span style="font-size:.72rem;color:var(--t4);font-weight:600">from yesterday</span></div>
+      <div class="mini-chart">
+        ${m.bars.map((h,i)=>`<div class="chart-bar${i===m.bars.length-1?' high':''}" style="height:${h}%"></div>`).join('')}
+      </div>
+      <div class="sell-advice">💡 ${m.advice}</div>
+    </div>`).join('');
+}
+
+function filterMarket(cat,btn){
+  document.querySelectorAll('#market-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMarket(cat);
+}
+
+// ===== NOTIFICATIONS =====
+const notifications=[
+  {id:1,type:'disease',icon:'⚠️',iconBg:'#FEE2E2',iconColor:'#991B1B',title:'Blast Disease Alert — High Risk',desc:'Your area (Kottayam) has reported multiple blast disease cases this week. Preventive spray recommended within 24 hours.',time:'2 hours ago',unread:true},
+  {id:2,type:'weather',icon:'🌧️',iconBg:'#DBEAFE',iconColor:'#1E40AF',title:'Heavy Rainfall Alert — Tomorrow',desc:'IMD forecasts heavy to very heavy rainfall (90%+ probability) tomorrow. Delay pesticide applications and protect harvested produce.',time:'5 hours ago',unread:true},
+  {id:3,type:'market',icon:'📈',iconBg:'var(--g100)',iconColor:'var(--g700)',title:'Paddy Prices at 6-Month High',desc:'Kottayam APMC paddy price reached ₹2,450/quintal — up 3.2% from yesterday. Consider selling 50-60% of your stock.',time:'1 day ago',unread:true},
+  {id:4,type:'advisory',icon:'🌱',iconBg:'#FEF3C7',iconColor:'#92400E',title:'Fertilizer Reminder — Field A',desc:'Based on your crop schedule, it\'s time to apply the second dose of NPK fertilizer to your paddy field (Field A).',time:'1 day ago',unread:true},
+  {id:5,type:'weather',icon:'☀️',iconBg:'#FEF3C7',iconColor:'#92400E',title:'Clear Weather Window — Thursday',desc:'Thursday promises clear skies and low humidity. Ideal time for pesticide application and field inspections.',time:'2 days ago',unread:false},
+  {id:6,type:'market',icon:'🥥',iconBg:'#F0F9FF',iconColor:'#0369A1',title:'Coconut Prices — Hold Recommendation',desc:'With Onam approaching in 3 weeks, coconut prices are expected to rise 15-20%. Advisable to hold your produce.',time:'2 days ago',unread:false},
+  {id:7,type:'disease',icon:'🔬',iconBg:'#FEE2E2',iconColor:'#991B1B',title:'Stem Borer Sighting Reported Nearby',desc:'Farmers in your district have reported stem borer damage. Install pheromone traps immediately — 1 per 5 acres.',time:'3 days ago',unread:false},
+];
+
+function renderNotifications(filter='all'){
+  const list=document.getElementById('notif-list');
+  const data=filter==='all'?notifications:notifications.filter(n=>n.type===filter);
+  list.innerHTML=data.map(n=>`
+    <div class="notif-item ${n.unread?'unread':''}" onclick="markRead(${n.id})">
+      <div class="notif-icon" style="background:${n.iconBg};color:${n.iconColor}">${n.icon}</div>
+      <div class="notif-body">
+        <div class="notif-title">${n.title}</div>
+        <div class="notif-desc">${n.desc}</div>
+        <div class="notif-time">${n.time}</div>
+      </div>
+      ${n.unread?'<div class="notif-dot"></div>':''}
+    </div>`).join('');
+}
+
+function filterNotif(cat,btn){
+  document.querySelectorAll('.notif-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotifications(cat==='all'?'all':cat);
+}
+
+function markRead(id){
+  const n=notifications.find(x=>x.id===id);
+  if(n){n.unread=false;renderNotifications();}
+}
+
+function markAllRead(){
+  notifications.forEach(n=>n.unread=false);
+  renderNotifications();
+  showToast('✅ All notifications marked as read');
+  document.querySelector('.notif-dot')&&(document.querySelector('#topbar .notif-dot').style.display='none');
+}
+
+// ===== TOAST NOTIFICATIONS =====
+function showToast(msg,duration=3000){
+  const container=document.getElementById('toasts');
+  const toast=document.createElement('div');
+  toast.className='toast';
+  toast.innerHTML=`<i class="fa fa-circle-check"></i> ${msg}`;
+  container.appendChild(toast);
+  setTimeout(()=>{toast.style.opacity='0';toast.style.transform='translateY(12px)';toast.style.transition='all .3s';setTimeout(()=>toast.remove(),300);},duration);
+}
+
+function showProfileMenu(){showToast('👤 Profile: Rajan Kumar | Farmer | Kottayam');}
+
+// ===== INIT =====
+function initApp(){
+  setGreeting();
+  renderMarket();
+  renderNotifications();
+  applyTranslations();
+  // Update time every minute
+  setInterval(setGreeting,60000);
+  // Initial advisory visible
+  document.getElementById('advisory-result').classList.add('show');
+}
+
+// INIT on load
+document.addEventListener('DOMContentLoaded',()=>{
+  applyTranslations();
+  setGreeting();
+  // Setup disease result default show
+  document.getElementById('disease-result').classList.add('show');
+  document.getElementById('treatment-list').innerHTML=diseases.blast.treatments.map(s=>`
+    <div class="treatment-step"><div class="step-num">${s.num}</div><div class="step-text">${s.text}</div></div>`).join('');
+});
+</script>
+</body>
+</html>
