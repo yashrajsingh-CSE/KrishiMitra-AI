@@ -145,7 +145,7 @@
 ### 📊 Market Insights — Live Mandi Prices
 
 <div align="center">
-  <img src="screenshots/market-insights.png" alt="KrishiMitra AI — Market Insights" width="88%"/>
+  <img src="market-insights.png" alt="KrishiMitra AI — Market Insights" width="88%"/>
   <br/><br/>
   <kbd>🔴 Live Data</kbd> &nbsp; <kbd>📈 Mini Charts</kbd> &nbsp; <kbd>🤖 AI Sell Strategy</kbd> &nbsp; <kbd>🏷️ Category Filters</kbd>
 </div>
